@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bohol Provincial Health Office | Home</title>
+  <meta name="description" content="Official website of the Bohol Provincial Health Office — Sa PHO, Una ang Serbisyo! Healthcare services for the Province of Bohol, Philippines." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header id="navbar" class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" id="nav-logo">
+        <img src="assets/logo/Bohol_Province_Seal.png" alt="Province of Bohol Seal" class="nav-logo-img" />
+        <div class="nav-logo-img pho-logo-wrapper">
+          <img src="assets/logo/pho_logo.png" alt="PHO Bohol Logo" />
+        </div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-title">Bohol Provincial Health Office</span>
+          <span class="nav-logo-sub">Province of Bohol, Philippines</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="nav-links">
+        <a href="index.html" class="nav-link active" id="nav-home">Home</a>
+        <a href="#about" class="nav-link" id="nav-about">About</a>
+        <a href="#services" class="nav-link" id="nav-services">Services</a>
+        <a href="#footer" class="nav-link" id="nav-contact">Contact Us</a>
+      </nav>
+      <button class="hamburger" id="hamburger-btn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== HERO CAROUSEL ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-carousel">
+      <div class="hero-slide active">
+        <img src="assets/hero-1.jpg" alt="Bohol Provincial Capitol Building" />
+      </div>
+      <div class="hero-slide">
+        <img src="assets/hero-2.jpg" alt="Community health outreach program" />
+      </div>
+      <div class="hero-slide">
+        <img src="assets/hero-3.jpg" alt="Provincial hospital facility" />
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-welcome">Welcome To</p>
+      <h1 class="hero-heading">Bohol Provincial<br /><em>Health Office</em></h1>
+      <p class="hero-tagline">Sa PHO, Una ang Serbisyo!</p>
+    </div>
+
+    <div class="hero-dots">
+      <button class="hero-dot active" aria-label="Slide 1"></button>
+      <button class="hero-dot" aria-label="Slide 2"></button>
+      <button class="hero-dot" aria-label="Slide 3"></button>
+    </div>
+  </section>
+
+  <!-- ===== OUR SERVICES ===== -->
+  <section class="services-section" id="services">
+    <div class="container">
+      <div class="section-header center">
+        <p class="section-eyebrow">What We Do</p>
+        <h2 class="section-title">Our Services</h2>
+        <p class="section-subtitle">Delivering accessible, quality healthcare to every Boholano through our three core service pillars.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <!-- Card 1: Laboratory -->
+        <a href="laboratory.html" class="flip-card" id="card-laboratory">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flip-card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#2e7d32" stroke-width="2">
+                  <path d="M18 6h12v14l8 16a4 4 0 0 1-3.58 5.78H13.58A4 4 0 0 1 10 36L18 20z" />
+                  <line x1="18" y1="6" x2="30" y2="6" stroke-linecap="round" />
+                  <path d="M15 30h18" stroke-dasharray="2 3" />
+                  <circle cx="21" cy="34" r="2" fill="#4caf50" stroke="none" />
+                  <circle cx="28" cy="32" r="1.5" fill="#81c784" stroke="none" />
+                </svg>
+              </div>
+              <h3 class="flip-card-title">Laboratory &amp; Other<br />Health Facilities</h3>
+              <div class="flip-card-color-bar lab"></div>
+            </div>
+            <div class="flip-card-back lab">
+              <h3 class="flip-card-back-title">Laboratory &amp; Health Facilities</h3>
+              <p class="flip-card-back-desc">Provincial diagnostic labs, cold chain facility, water bacteriology, drug testing, PCR laboratory, dialysis centers, and wellness centers serving the province.</p>
+              <span class="flip-card-back-btn">VIEW DETAILS →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 2: Promotive & Preventive -->
+        <a href="promotive.html" class="flip-card" id="card-promotive">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flip-card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#e53935" stroke-width="2">
+                  <path d="M24 42s-16-9.2-16-20a9 9 0 0 1 16-5.7A9 9 0 0 1 40 22c0 10.8-16 20-16 20z" />
+                  <path d="M18 22h12M24 16v12" stroke="#e53935" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h3 class="flip-card-title">Promotive &amp; Preventive<br />Health Services</h3>
+              <div class="flip-card-color-bar promo"></div>
+            </div>
+            <div class="flip-card-back promo">
+              <h3 class="flip-card-back-title">Promotive &amp; Preventive Services</h3>
+              <p class="flip-card-back-desc">Health education, epidemiology &amp; surveillance, disaster risk reduction, nutrition, oral health, vaccination programs, and community-based health initiatives.</p>
+              <span class="flip-card-back-btn">VIEW DETAILS →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 3: Hospital Services -->
+        <a href="hospitals.html" class="flip-card" id="card-hospitals">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flip-card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#1565c0" stroke-width="2">
+                  <rect x="6" y="14" width="36" height="28" rx="3" />
+                  <rect x="16" y="6" width="16" height="10" rx="2" />
+                  <path d="M20 28h8M24 24v8" stroke-linecap="round" />
+                  <path d="M6 20h36" />
+                </svg>
+              </div>
+              <h3 class="flip-card-title">Hospital<br />Services</h3>
+              <div class="flip-card-color-bar hosp"></div>
+            </div>
+            <div class="flip-card-back hosp">
+              <h3 class="flip-card-back-title">Hospital Services</h3>
+              <p class="flip-card-back-desc">Nine provincial hospitals across Bohol providing comprehensive medical care — from general medicine to specialized services for every district.</p>
+              <span class="flip-card-back-btn">VIEW DETAILS →</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT US ===== -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-layout">
+        <div class="about-left">
+          <p class="section-eyebrow">Who We Are</p>
+          <h2 class="about-heading">About Us</h2>
+          <p class="about-body">
+            The Bohol Provincial Health Office (PHO) is the frontline agency of the Provincial Government of Bohol mandated to deliver quality healthcare services to every Boholano. Guided by our Vision, Mission, and Goals, we strive for a healthy and self-reliant community.
+          </p>
+          <a href="#services" class="btn-primary" id="explore-services-btn">Explore Our Services →</a>
+        </div>
+        <div class="about-right">
+          <div class="accordion" id="accordion">
+
+            <div class="accordion-item open">
+              <div class="accordion-header" id="accordion-vision">
+                <span class="accordion-header-title">Vision</span>
+                <span class="accordion-icon">+</span>
+              </div>
+              <div class="accordion-body">
+                <div class="accordion-body-inner">
+                  A responsive and dynamic health organization committed to provide the best quality services with skilled, competent and effective personnel geared towards healthy and self-reliant Boholano community.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <div class="accordion-header" id="accordion-mission">
+                <span class="accordion-header-title">Mission</span>
+                <span class="accordion-icon">+</span>
+              </div>
+              <div class="accordion-body">
+                <div class="accordion-body-inner">
+                  To ensure and safeguard the health of the Boholano community through effective and sustainable delivery of promotive, preventive, curative and rehabilitative health services in partnership with all stakeholders for a productive Boholano.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <div class="accordion-header" id="accordion-goals">
+                <span class="accordion-header-title">Goals</span>
+                <span class="accordion-icon">+</span>
+              </div>
+              <div class="accordion-body">
+                <div class="accordion-body-inner">
+                  <ul>
+                    <li>Reduce infant and maternal mortality rate</li>
+                    <li>Reduce morbidity and mortality from communicable diseases</li>
+                    <li>Reduce morbidity and mortality from non-communicable diseases</li>
+                    <li>Reduce morbidity and mortality from injuries and violence</li>
+                    <li>Improve nutritional status of families</li>
+                    <li>Promote healthy lifestyle and environmental health</li>
+                    <li>Strengthen health regulatory programs</li>
+                    <li>Ensure access to quality hospitals and health facilities</li>
+                    <li>Provide quality laboratory and diagnostic services</li>
+                    <li>Build resilient health systems for disaster response</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="footer">
+    <div class="footer-main">
+      <div class="footer-brand footer-col">
+        <div class="footer-logo-wrap">
+          <img src="assets/logo/pho_logo.png" alt="PHO Bohol Logo" class="footer-logo-img" />
+          <div>
+            <div class="footer-logo-title">Bohol Provincial Health Office</div>
+            <div class="footer-logo-sub">Province of Bohol, Philippines</div>
+          </div>
+        </div>
+        <p class="footer-brand-desc">The frontline agency of the Provincial Government of Bohol mandated to deliver quality healthcare services to every Boholano.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Quick Links</h4>
+        <ul class="footer-link-list">
+          <li><a href="index.html" class="footer-link-item">Home</a></li>
+          <li><a href="#about" class="footer-link-item">About</a></li>
+          <li><a href="#services" class="footer-link-item">Services</a></li>
+          <li><a href="laboratory.html" class="footer-link-item">Laboratory &amp; Facilities</a></li>
+          <li><a href="promotive.html" class="footer-link-item">Promotive &amp; Preventive</a></li>
+          <li><a href="hospitals.html" class="footer-link-item">Hospitals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Contact Information</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.68 2 2 0 0 1 3.59 1.5h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.33a2 2 0 0 1-.45 2.11L7.91 9.06a16 16 0 0 0 6.07 6.07l1.27-1.27a2 2 0 0 1 2.11-.45c.73.34 1.52.57 2.33.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>(038) 411 0138 · Local: 41107</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:pho_bohol@yahoo.com">pho_bohol@yahoo.com</a>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <a href="https://www.facebook.com/boholpho" target="_blank">Bohol Provincial Health Office</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Government Links</h4>
+        <div class="footer-gov-links">
+          <a href="https://bohol.gov.ph" target="_blank" class="footer-gov-link">Province of Bohol</a>
+          <a href="https://doh.gov.ph" target="_blank" class="footer-gov-link">Dept. of Health</a>
+          <a href="https://www.gov.ph" target="_blank" class="footer-gov-link">GOV.PH</a>
+          <a href="https://philhealth.gov.ph" target="_blank" class="footer-gov-link">PhilHealth</a>
+          <a href="https://fda.gov.ph" target="_blank" class="footer-gov-link">FDA Philippines</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        © 2026 Bohol Provincial Health Office. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
