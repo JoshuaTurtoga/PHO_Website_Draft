@@ -28,37 +28,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* ─── Hero carousel (landing page only) ─── */
-  const slides = document.querySelectorAll('.hero-slide');
-  const dots   = document.querySelectorAll('.hero-dot');
+  /* ─── Generic Carousel Logic ─── */
+  const carousels = document.querySelectorAll('.carousel-container');
+  carousels.forEach(carousel => {
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots   = carousel.querySelectorAll('.carousel-dot');
 
-  if (slides.length > 0) {
-    let current = 0;
-    const total = slides.length;
+    if (slides.length > 0) {
+      let current = 0;
+      const total = slides.length;
 
-    function goToSlide(idx) {
-      slides[current].classList.remove('active');
-      dots[current]?.classList.remove('active');
-      current = (idx + total) % total;
-      slides[current].classList.add('active');
-      dots[current]?.classList.add('active');
-    }
+      function goToSlide(idx) {
+        slides[current].classList.remove('active');
+        if (dots[current]) dots[current].classList.remove('active');
+        current = (idx + total) % total;
+        slides[current].classList.add('active');
+        if (dots[current]) dots[current].classList.add('active');
+      }
 
-    // Auto-play every 5s
-    let autoPlay = setInterval(() => goToSlide(current + 1), 5000);
+      // Auto-play every 5s
+      let autoPlay = setInterval(() => goToSlide(current + 1), 5000);
 
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        clearInterval(autoPlay);
-        goToSlide(i);
-        autoPlay = setInterval(() => goToSlide(current + 1), 5000);
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          clearInterval(autoPlay);
+          goToSlide(i);
+          autoPlay = setInterval(() => goToSlide(current + 1), 5000);
+        });
       });
-    });
 
-    // Initialize first slide
-    slides[0]?.classList.add('active');
-    dots[0]?.classList.add('active');
-  }
+      // Initialize first slide
+      if (slides[0]) slides[0].classList.add('active');
+      if (dots[0]) dots[0].classList.add('active');
+    }
+  });
 
   /* ─── Accordion (About section) ─── */
   const accordionHeaders = document.querySelectorAll('.accordion-header');
