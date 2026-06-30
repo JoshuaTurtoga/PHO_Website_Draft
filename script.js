@@ -132,5 +132,111 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  /* ─── Org Structure Carousel & Lightbox ─── */
+  const orgTrack = document.getElementById('org-carousel-track');
+  const orgLeftArrow = document.querySelector('.org-arrow-left');
+  const orgRightArrow = document.querySelector('.org-arrow-right');
+  const orgSlides = document.querySelectorAll('.org-slide');
+  
+  if (orgTrack && orgSlides.length > 0) {
+    // Arrow Navigation
+    const getScrollAmount = () => {
+      if (orgSlides[0]) {
+        return orgSlides[0].offsetWidth + 24; // slide width + gap (1.5rem = 24px)
+      }
+      return orgTrack.clientWidth;
+    };
+
+    orgLeftArrow?.addEventListener('click', () => {
+      orgTrack.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    });
+
+    orgRightArrow?.addEventListener('click', () => {
+      orgTrack.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    });
+
+    // Drag-to-Swipe on Desktop
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    orgTrack.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - orgTrack.offsetLeft;
+      scrollLeft = orgTrack.scrollLeft;
+    });
+
+    orgTrack.addEventListener('mouseleave', () => {
+      isDown = false;
+    });
+
+    orgTrack.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    orgTrack.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - orgTrack.offsetLeft;
+      const walk = (x - startX) * 1.5; // Scroll speed multiplier
+      orgTrack.scrollLeft = scrollLeft - walk;
+    });
+
+    // Lightbox Modal Setup
+    const lightbox = document.getElementById('org-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close');
+
+    if (lightbox && lightboxImg) {
+      // Open Lightbox on slide click
+      orgSlides.forEach(slide => {
+        const img = slide.querySelector('.org-image');
+        slide.addEventListener('click', () => {
+          if (img) {
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            lightbox.style.display = 'flex';
+            // Trigger reflow for active transition
+            setTimeout(() => {
+              lightbox.classList.add('active');
+              lightbox.setAttribute('aria-hidden', 'false');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Prevent page scroll
+          }
+        });
+      });
+
+      // Close Lightbox
+      const closeLightbox = () => {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = ''; // Restore page scroll
+        // Wait for fade transition before hiding display
+        setTimeout(() => {
+          if (!lightbox.classList.contains('active')) {
+            lightbox.style.display = 'none';
+            lightboxImg.src = ''; // Clear image src
+          }
+        }, 350);
+      };
+
+      lightboxClose?.addEventListener('click', closeLightbox);
+      
+      // Close on clicking backdrop (outside image)
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+          closeLightbox();
+        }
+      });
+
+      // Close on ESC key press
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        }
+      });
+    }
+  }
+
   console.log('🏥 Bohol Provincial Health Office — website loaded');
 });

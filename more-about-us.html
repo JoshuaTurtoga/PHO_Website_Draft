@@ -40,7 +40,7 @@
   <!-- ===== MAIN CONTENT ===== -->
   <main>
     <!-- 1. Hero Section -->
-    <section class="about-hero" style="background-image: url('assets/about/hero.png');">
+    <section class="about-hero" style="background-image: url('assets/about/hero.jpg');">
       <div class="about-hero-content">
         <h1 class="about-hero-title">About Us</h1>
         <p style="font-size: 1.2rem; max-width: 600px; margin: auto;">Guided by our Vision, Mission, and Goals, we strive for a healthy and self-reliant Boholano community.</p>
@@ -138,21 +138,57 @@
         <p class="section-eyebrow" style="text-align: center;">Our Departments</p>
         <h2 class="section-heading" style="text-align: center;">Sections &amp; Units</h2>
         <div class="units-grid">
-          <div class="unit-card">
-            <img src="assets/about/unit-finance.png" alt="Budget & Finance" />
-            <h3 class="unit-title">Budget &amp; Finance</h3>
+          <!-- Budget & Finance -->
+          <div class="unit-flip-card">
+            <div class="unit-card-inner">
+              <div class="unit-card-front">
+                <img src="assets/about/unit-finance.png" alt="Budget & Finance" />
+                <h3 class="unit-title">Budget &amp; Finance</h3>
+              </div>
+              <div class="unit-card-back">
+                <h3 class="unit-title-back">Budget &amp; Finance</h3>
+                <p class="unit-desc">Manages financial allocations, budgets for health programs and hospitals, medical procurement, payroll, and auditing compliance to support frontline healthcare services.</p>
+              </div>
+            </div>
           </div>
-          <div class="unit-card">
-            <img src="assets/about/unit-hr.png" alt="Human Resources Development" />
-            <h3 class="unit-title">Human Resources Development</h3>
+          <!-- Human Resources Development -->
+          <div class="unit-flip-card">
+            <div class="unit-card-inner">
+              <div class="unit-card-front">
+                <img src="assets/about/unit-hr.png" alt="Human Resources Development" />
+                <h3 class="unit-title">Human Resources Development</h3>
+              </div>
+              <div class="unit-card-back">
+                <h3 class="unit-title-back">Human Resources</h3>
+                <p class="unit-desc">Recruits, trains, and supports our healthcare workforce. Manages personnel onboarding, continuous training, and evaluations to deliver quality public health services.</p>
+              </div>
+            </div>
           </div>
-          <div class="unit-card">
-            <img src="assets/about/unit-records.png" alt="Records & Communications" />
-            <h3 class="unit-title">Records &amp; Communications</h3>
+          <!-- Records & Communications -->
+          <div class="unit-flip-card">
+            <div class="unit-card-inner">
+              <div class="unit-card-front">
+                <img src="assets/about/unit-records.png" alt="Records & Communications" />
+                <h3 class="unit-title">Records &amp; Communications</h3>
+              </div>
+              <div class="unit-card-back">
+                <h3 class="unit-title-back">Records &amp; Comm</h3>
+                <p class="unit-desc">Manages official documentation, inter-office correspondence, and public health records while ensuring data privacy compliance and efficient information flow.</p>
+              </div>
+            </div>
           </div>
-          <div class="unit-card">
-            <img src="assets/about/unit-supplies.png" alt="Supplies/Proper/Gen. Services" />
-            <h3 class="unit-title">Supplies &amp; Gen. Services</h3>
+          <!-- Supplies & Gen. Services -->
+          <div class="unit-flip-card">
+            <div class="unit-card-inner">
+              <div class="unit-card-front">
+                <img src="assets/about/unit-supplies.png" alt="Supplies & Gen. Services" />
+                <h3 class="unit-title">Supplies &amp; Gen. Services</h3>
+              </div>
+              <div class="unit-card-back">
+                <h3 class="unit-title-back">Supplies &amp; Services</h3>
+                <p class="unit-desc">Manages procurement, storage, and distribution of medical assets and supplies. Coordinates facility maintenance, security, and the ambulance/vehicle fleet.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -161,10 +197,111 @@
     <!-- 4. Organizational Structure section -->
     <section class="org-structure-section">
       <div class="container">
-        <p class="section-eyebrow">How We Work</p>
-        <h2 class="section-heading">Organizational Structure</h2>
-        <div class="org-structure-wrapper">
-          <img src="assets/about/org-chart.png" alt="PHO Organizational Structure" />
+        <p class="section-eyebrow" style="text-align: center;">How We Work</p>
+        <h2 class="section-heading" style="text-align: center;">Organizational Structure</h2>
+        <div class="org-carousel-wrapper">
+          <!-- Navigation Arrows -->
+          <button class="org-arrow org-arrow-left" aria-label="Previous page">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button class="org-arrow org-arrow-right" aria-label="Next page">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+
+          <!-- Carousel Track -->
+          <div class="org-carousel-track" id="org-carousel-track">
+            <!-- Slide 1 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org1.png" alt="PHO Organizational Structure - Part 1" class="org-image" />
+                <div class="org-slide-caption">Page 1 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org2.png" alt="PHO Organizational Structure - Part 2" class="org-image" />
+                <div class="org-slide-caption">Page 2 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org3.png" alt="PHO Organizational Structure - Part 3" class="org-image" />
+                <div class="org-slide-caption">Page 3 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 4 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org4.png" alt="PHO Organizational Structure - Part 4" class="org-image" />
+                <div class="org-slide-caption">Page 4 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 5 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org5.png" alt="PHO Organizational Structure - Part 5" class="org-image" />
+                <div class="org-slide-caption">Page 5 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 6 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org6.png" alt="PHO Organizational Structure - Part 6" class="org-image" />
+                <div class="org-slide-caption">Page 6 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 7 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org7.png" alt="PHO Organizational Structure - Part 7" class="org-image" />
+                <div class="org-slide-caption">Page 7 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 8 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org8.png" alt="PHO Organizational Structure - Part 8" class="org-image" />
+                <div class="org-slide-caption">Page 8 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 9 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org9.png" alt="PHO Organizational Structure - Part 9" class="org-image" />
+                <div class="org-slide-caption">Page 9 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 10 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org10.png" alt="PHO Organizational Structure - Part 10" class="org-image" />
+                <div class="org-slide-caption">Page 10 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 11 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org11.png" alt="PHO Organizational Structure - Part 11" class="org-image" />
+                <div class="org-slide-caption">Page 11 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 12 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org12.png" alt="PHO Organizational Structure - Part 12" class="org-image" />
+                <div class="org-slide-caption">Page 12 of 13</div>
+              </div>
+            </div>
+            <!-- Slide 13 -->
+            <div class="org-slide">
+              <div class="org-slide-inner">
+                <img src="assets/about/org13.png" alt="PHO Organizational Structure - Part 13" class="org-image" />
+                <div class="org-slide-caption">Page 13 of 13</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -234,6 +371,16 @@
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
+
+  <!-- Lightbox Zoom Overlay -->
+  <div id="org-lightbox" class="lightbox-overlay" aria-hidden="true" role="dialog">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close zoom view">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="Zoomed PHO Organizational Structure Chart" />
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
