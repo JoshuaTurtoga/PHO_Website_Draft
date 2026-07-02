@@ -736,6 +736,20 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .facility-card.promo .facility-icon-wrap { background: #fce4ec; }
 .facility-card.promo .facility-name { color: #b71c1c; }
 
+/* Hospital group headings */
+.hospital-group {
+  margin-bottom: 4rem;
+}
+.hospital-group-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  text-align: center;
+  display: block;
+  margin-bottom: 2rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
 
 /* ══════════════════════════════════════
    FOOTER — Shared across all pages
