@@ -238,5 +238,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  console.log('🏥 Bohol Provincial Health Office — website loaded');
+  console.log('Bohol Provincial Health Office — website loaded');
 });
