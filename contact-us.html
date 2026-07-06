@@ -102,27 +102,28 @@
             <p class="form-subtitle">Have a question or feedback? Complete this form to email us directly.</p>
             
             <!-- 
-                 CONTACT EMAIL RECEIVER CONFIGURATION:
-                 By default, pure HTML forms cannot send email without a backend service.
-                 To make this form functional, replace the action attribute below with your active email gateway,
-                 such as Formspree (e.g. action="https://formspree.io/f/your_key"), EmailJS, Web3Forms,
-                 or a custom PHP endpoint (e.g. action="send_mail.php").
-                 
-                 REPLACE THIS PLACEHOLDER: 'your_email@example.com' with the actual PHO recipient email.
+                 ─────────────────────────────────────────────────────────────
+                 EMAILJS CONFIGURATION — Fill in the 3 placeholders below:
+                 1. YOUR_PUBLIC_KEY   → EmailJS Dashboard → Account → Public Key
+                 2. YOUR_SERVICE_ID   → EmailJS Dashboard → Email Services → Service ID
+                 3. YOUR_TEMPLATE_ID  → EmailJS Dashboard → Email Templates → Template ID
+
+                 Template variable names used:
+                   {{from_name}}  → sender's name (Subject line & From Name)
+                   {{name}}       → sender's name (email body)
+                   {{reply_to}}   → sender's email (Reply-To field)
+                   {{message}}    → message body
+                 ─────────────────────────────────────────────────────────────
             -->
-            <form action="https://formspree.io/f/your_email@example.com" method="POST" id="contact-email-form">
+            <form id="contact-email-form" novalidate>
               <div class="form-grid">
                 <div class="form-group">
                   <label for="form-name" class="form-label">Full Name</label>
-                  <input type="text" id="form-name" name="name" class="form-control" placeholder="Juan Dela Cruz" required />
+                  <input type="text" id="form-name" name="from_name" class="form-control" placeholder="Juan Dela Cruz" required />
                 </div>
                 <div class="form-group">
                   <label for="form-email" class="form-label">Email Address</label>
-                  <input type="email" id="form-email" name="email" class="form-control" placeholder="juan@example.com" required />
-                </div>
-                <div class="form-group full-width">
-                  <label for="form-subject" class="form-label">Subject</label>
-                  <input type="text" id="form-subject" name="subject" class="form-control" placeholder="Inquiry about healthcare services" required />
+                  <input type="email" id="form-email" name="from_email" class="form-control" placeholder="juan@example.com" required />
                 </div>
                 <div class="form-group full-width">
                   <label for="form-message" class="form-label">Your Message</label>
@@ -413,27 +414,74 @@
   </button>
 
   <script src="script.js"></script>
+
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const emailForm = document.getElementById('contact-email-form');
-      const statusDiv = document.getElementById('form-status');
-      
+
+      // ─────────────────────────────────────────────────────────────
+      // EMAILJS CONFIGURATION
+      // Replace the three placeholder strings below with your own values
+      // from the EmailJS dashboard (https://www.emailjs.com/)
+      // ─────────────────────────────────────────────────────────────
+      const EMAILJS_PUBLIC_KEY  = '_IYyMjK3_TrrK-5Gd';   // Account → Public Key
+      const EMAILJS_SERVICE_ID  = 'service_aj6nw4c';   // Email Services → Service ID
+      const EMAILJS_TEMPLATE_ID = 'template_5gjg23e';  // Email Templates → Template ID
+      // ─────────────────────────────────────────────────────────────
+
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+      const emailForm  = document.getElementById('contact-email-form');
+      const statusDiv  = document.getElementById('form-status');
+      const submitBtn  = document.getElementById('btn-submit');
+
       emailForm?.addEventListener('submit', function(e) {
-        const answer = document.getElementById('spam-answer').value;
-        if (parseInt(answer) !== 7) {
-          e.preventDefault();
+        e.preventDefault();
+
+        // Anti-spam check
+        const answer = parseInt(document.getElementById('spam-answer').value);
+        if (answer !== 7) {
           statusDiv.style.color = '#c62828';
-          statusDiv.textContent = 'Spam verification failed. What is 4 + 3? (Hint: The answer is 7).';
+          statusDiv.textContent = 'Verification failed. Hint: 4 + 3 = 7.';
           return;
         }
 
-        const action = this.getAttribute('action');
-        if (action.includes('your_email@example.com')) {
-          e.preventDefault();
+        // Check placeholders are still set (dev guard)
+        if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
           statusDiv.style.color = 'var(--green-primary)';
-          statusDiv.textContent = 'Message simulated successfully! To activate actual email delivery, configure your Formspree/backend endpoint inside the HTML form action.';
-          this.reset();
+          statusDiv.textContent = '⚠ EmailJS not yet configured. Add your Public Key, Service ID, and Template ID in contact-us.html.';
+          return;
         }
+
+        // Disable button while sending
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+        statusDiv.style.color = 'var(--text-light)';
+        statusDiv.textContent = 'Sending your message…';
+
+        const templateParams = {
+          from_name: document.getElementById('form-name').value,
+          name:      document.getElementById('form-name').value,
+          reply_to:  document.getElementById('form-email').value,
+          message:   document.getElementById('form-message').value,
+        };
+
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+          .then(() => {
+            statusDiv.style.color = 'var(--green-primary)';
+            statusDiv.textContent = '✓ Message sent successfully! We will get back to you soon.';
+            emailForm.reset();
+          })
+          .catch((err) => {
+            console.error('EmailJS error:', err);
+            statusDiv.style.color = '#c62828';
+            statusDiv.textContent = '✕ Failed to send message. Please try again or call us directly.';
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> Send Email';
+          });
       });
     });
   </script>
