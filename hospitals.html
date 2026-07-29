@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -38,10 +38,10 @@
   </header>
 
   <!-- ===== PAGE HERO ===== -->
-  <section class="page-hero">
+  <section class="page-hero" data-cms-img="hospitals.hero.bg">
     <div class="page-hero-content">
       <h1 class="page-hero-title">Hospital Services</h1>
-      <p class="page-hero-subtitle">Ten provincial hospitals delivering comprehensive medical care across Bohol</p>
+      <p class="page-hero-subtitle" data-cms-key="hospitals.hero.subtitle">Ten provincial hospitals delivering comprehensive medical care across Bohol</p>
       <p class="page-hero-breadcrumb"><a href="index.html">Home</a> <span>›</span> <a href="index.html#services">Services</a> <span>›</span> Hospital Services</p>
     </div>
   </section>
@@ -64,7 +64,7 @@
             <div class="facility-icon-wrap">
               <svg viewBox="0 0 40 40" fill="none" stroke="#1565c0" stroke-width="2"><rect x="6" y="10" width="28" height="24" rx="3"/><rect x="14" y="4" width="12" height="8" rx="2"/><path d="M18 22h4M20 20v4" stroke-linecap="round"/><line x1="6" y1="16" x2="34" y2="16"/></svg>
             </div>
-            <h3 class="facility-name">Garcia Memorial Provincial Hospital (GMPH)</h3>
+            <h3 class="facility-name" data-cms-key="hospitals.gmph.name">Garcia Memorial Provincial Hospital (GMPH)</h3>
             <p class="facility-desc">Located in San Jose, Talibon, Bohol. A provincial hospital providing comprehensive secondary-level care to the northern and eastern parts of the province.</p>
           </a>
 
@@ -80,7 +80,7 @@
             <div class="facility-icon-wrap">
               <svg viewBox="0 0 40 40" fill="none" stroke="#1565c0" stroke-width="2"><rect x="6" y="10" width="28" height="24" rx="3"/><rect x="14" y="4" width="12" height="8" rx="2"/><path d="M18 22h4M20 20v4" stroke-linecap="round"/><line x1="6" y1="16" x2="34" y2="16"/></svg>
             </div>
-            <h3 class="facility-name">Catigbian District Hospital (CDH)</h3>
+            <h3 class="facility-name" data-cms-key="hospitals.cdh.name">Catigbian District Hospital (CDH)</h3>
             <p class="facility-desc">Located in Poblacion West, Catigbian, Bohol. A district hospital serving the municipality of Catigbian and neighboring towns.</p>
           </a>
 
@@ -88,7 +88,7 @@
             <div class="facility-icon-wrap">
               <svg viewBox="0 0 40 40" fill="none" stroke="#1565c0" stroke-width="2"><rect x="6" y="10" width="28" height="24" rx="3"/><rect x="14" y="4" width="12" height="8" rx="2"/><path d="M18 22h4M20 20v4" stroke-linecap="round"/><line x1="6" y1="16" x2="34" y2="16"/></svg>
             </div>
-            <h3 class="facility-name">Francisco Dagohoy Municipal Hospital (FDMH)</h3>
+            <h3 class="facility-name" data-cms-key="hospitals.fdmh.name">Francisco Dagohoy Municipal Hospital (FDMH)</h3>
             <p class="facility-desc">Located in Inabanga, Bohol. A primary-level hospital serving the municipality of Inabanga and neighboring areas.</p>
           </a>
 
@@ -96,7 +96,7 @@
             <div class="facility-icon-wrap">
               <svg viewBox="0 0 40 40" fill="none" stroke="#1565c0" stroke-width="2"><rect x="6" y="10" width="28" height="24" rx="3"/><rect x="14" y="4" width="12" height="8" rx="2"/><path d="M18 22h4M20 20v4" stroke-linecap="round"/><line x1="6" y1="16" x2="34" y2="16"/></svg>
             </div>
-            <h3 class="facility-name">Teodoro B. Galagar District Hospital (TBGDH)</h3>
+            <h3 class="facility-name" data-cms-key="hospitals.tbgdh.name">Teodoro B. Galagar District Hospital (TBGDH)</h3>
             <p class="facility-desc">Located in Poblacion, Jagna, Bohol. A district hospital serving Jagna and surrounding municipalities in the southeastern part of the province.</p>
           </a>
 
@@ -222,6 +222,9 @@
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="cms-config.js"></script>
   <script src="script.js"></script>
+  <script src="cms.js"></script>
 </body>
 </html>

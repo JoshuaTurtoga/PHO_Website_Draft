@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -40,10 +40,10 @@
   <!-- ===== MAIN CONTENT ===== -->
   <main>
     <!-- 1. Hero Section -->
-    <section class="contact-hero">
+    <section class="contact-hero" data-cms-img="contact.hero.bg">
       <div class="contact-hero-content">
-        <h1 class="contact-hero-title">Contact Us</h1>
-        <p class="contact-hero-subtitle">We are here to assist you. Reach out to the Bohol Provincial Health Office through our dynamic channels, directory, or submit an online inquiry below.</p>
+        <h1 class="contact-hero-title" data-cms-key="contact.hero.title">Contact Us</h1>
+        <p class="contact-hero-subtitle" data-cms-key="contact.hero.subtitle">We are here to assist you. Reach out to the Bohol Provincial Health Office through our dynamic channels, directory, or submit an online inquiry below.</p>
       </div>
     </section>
 
@@ -62,7 +62,7 @@
                   </div>
                   <div class="contact-info-text">
                     <h4>Our Location</h4>
-                    <p>J.A. Clarin St., Tagbilaran City, Bohol 6300, Philippines</p>
+                    <p data-cms-key="contact.info.address">J.A. Clarin St., Tagbilaran City, Bohol 6300, Philippines</p>
                   </div>
                 </div>
                 <div class="contact-info-item">
@@ -71,7 +71,7 @@
                   </div>
                   <div class="contact-info-text">
                     <h4>Phone Numbers</h4>
-                    <p>Primary: (038) 411 0138<br>Local Admin: 41107<br>Local Health Office: 41034</p>
+                    <p data-cms-key="contact.info.phone">Primary: (038) 411 0138<br>Local Admin: 41107<br>Local Health Office: 41034</p>
                   </div>
                 </div>
                 <div class="contact-info-item">
@@ -425,8 +425,6 @@
 
       // ─────────────────────────────────────────────────────────────
       // EMAILJS CONFIGURATION
-      // Replace the three placeholder strings below with your own values
-      // from the EmailJS dashboard (https://www.emailjs.com/)
       // ─────────────────────────────────────────────────────────────
       const EMAILJS_PUBLIC_KEY  = '_IYyMjK3_TrrK-5Gd';   // Account → Public Key
       const EMAILJS_SERVICE_ID  = 'service_aj6nw4c';   // Email Services → Service ID
@@ -442,11 +440,47 @@
       emailForm?.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Anti-spam check
-        const answer = parseInt(document.getElementById('spam-answer').value);
-        if (answer !== 7) {
+        const nameEl = document.getElementById('form-name');
+        const emailEl = document.getElementById('form-email');
+        const messageEl = document.getElementById('form-message');
+        const spamEl = document.getElementById('spam-answer');
+
+        const fields = [
+          { el: nameEl, val: nameEl?.value.trim() },
+          { el: emailEl, val: emailEl?.value.trim() },
+          { el: messageEl, val: messageEl?.value.trim() },
+          { el: spamEl, val: spamEl?.value.trim() }
+        ];
+
+        // Reset highlights
+        fields.forEach(f => {
+          if (f.el) {
+            f.el.classList.remove('is-invalid');
+            f.el.addEventListener('input', () => f.el.classList.remove('is-invalid'), { once: true });
+          }
+        });
+
+        // Check for empty fields
+        let hasEmpty = false;
+        fields.forEach(f => {
+          if (!f.val) {
+            f.el?.classList.add('is-invalid');
+            hasEmpty = true;
+          }
+        });
+
+        if (hasEmpty) {
           statusDiv.style.color = '#c62828';
-          statusDiv.textContent = 'Verification failed. Hint: 4 + 3 = 7.';
+          statusDiv.textContent = 'Please fill in all required fields before sending.';
+          return;
+        }
+
+        // Anti-spam check
+        const answer = parseInt(spamEl.value.trim(), 10);
+        if (answer !== 7) {
+          spamEl.classList.add('is-invalid');
+          statusDiv.style.color = '#c62828';
+          statusDiv.textContent = 'Verification failed. Incorrect answer.';
           return;
         }
 
@@ -488,5 +522,8 @@
       });
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="cms-config.js"></script>
+  <script src="cms.js"></script>
 </body>
 </html>

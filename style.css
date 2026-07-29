@@ -2036,6 +2036,12 @@ textarea.form-control {
   outline: none;
   border-color: var(--green-primary);
 }
+.form-control.is-invalid,
+.form-spam-input.is-invalid {
+  border-color: #c62828 !important;
+  background-color: #ffebee !important;
+  box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.15) !important;
+}
 .btn-submit {
   display: inline-flex;
   align-items: center;

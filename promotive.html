@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -38,10 +38,10 @@
   </header>
 
   <!-- ===== PAGE HERO ===== -->
-  <section class="page-hero">
+  <section class="page-hero" data-cms-img="promo.hero.bg">
     <div class="page-hero-content">
-      <h1 class="page-hero-title">Promotive &amp; Preventive Health Services</h1>
-      <p class="page-hero-subtitle">Community health programs focused on disease prevention and wellness promotion</p>
+      <h1 class="page-hero-title" data-cms-key="promo.hero.title">Promotive &amp; Preventive Health Services</h1>
+      <p class="page-hero-subtitle" data-cms-key="promo.hero.subtitle">Community health programs focused on disease prevention and wellness promotion</p>
       <p class="page-hero-breadcrumb"><a href="index.html">Home</a> <span>›</span> <a href="index.html#services">Services</a> <span>›</span> Promotive &amp; Preventive</p>
     </div>
   </section>
@@ -61,7 +61,7 @@
           <div class="facility-icon-wrap">
             <svg viewBox="0 0 40 40" fill="none" stroke="#b71c1c" stroke-width="2"><rect x="8" y="6" width="24" height="28" rx="2"/><line x1="14" y1="14" x2="26" y2="14"/><line x1="14" y1="20" x2="26" y2="20"/><line x1="14" y1="26" x2="22" y2="26"/><path d="M20 2l4 4H16l4-4z" fill="#ef9a9a" stroke="none"/></svg>
           </div>
-          <h3 class="facility-name">Health Education &amp; Promotion</h3>
+          <h3 class="facility-name" data-cms-key="promo.health_edu.name">Health Education &amp; Promotion</h3>
           <p class="facility-desc">Community health education campaigns, information dissemination, and public awareness programs.</p>
         </div>
 
@@ -69,7 +69,7 @@
           <div class="facility-icon-wrap">
             <svg viewBox="0 0 40 40" fill="none" stroke="#b71c1c" stroke-width="2"><circle cx="20" cy="20" r="14"/><path d="M8 20h24"/><path d="M20 8v24"/><circle cx="14" cy="14" r="2" fill="#ef9a9a" stroke="none"/><circle cx="26" cy="16" r="2" fill="#ef9a9a" stroke="none"/><circle cx="18" cy="26" r="2" fill="#ef9a9a" stroke="none"/></svg>
           </div>
-          <h3 class="facility-name">Epidemiology &amp; Surveillance</h3>
+          <h3 class="facility-name" data-cms-key="promo.epi.name">Epidemiology &amp; Surveillance</h3>
           <p class="facility-desc">Disease tracking, outbreak investigation, data analysis, and early warning systems for communicable diseases.</p>
         </div>
 
@@ -77,7 +77,7 @@
           <div class="facility-icon-wrap">
             <svg viewBox="0 0 40 40" fill="none" stroke="#b71c1c" stroke-width="2"><path d="M20 4l16 28H4z"/><line x1="20" y1="16" x2="20" y2="24"/><circle cx="20" cy="28" r="1.5" fill="#b71c1c" stroke="none"/></svg>
           </div>
-          <h3 class="facility-name">Disaster Risk Reduction</h3>
+          <h3 class="facility-name" data-cms-key="promo.drrm.name">Disaster Risk Reduction</h3>
           <p class="facility-desc">Health emergency preparedness, response planning, and post-disaster health recovery programs.</p>
         </div>
 
@@ -193,6 +193,9 @@
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="cms-config.js"></script>
   <script src="script.js"></script>
+  <script src="cms.js"></script>
 </body>
 </html>
