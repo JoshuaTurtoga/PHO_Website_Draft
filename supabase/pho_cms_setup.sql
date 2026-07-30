@@ -181,6 +181,7 @@ create table if not exists public.hospital_cards (
   title text not null,
   description text,
   url text,
+  image_url text,
   license_group text,
   sort_order integer not null default 0,
   created_at timestamptz not null default timezone('utc', now()),

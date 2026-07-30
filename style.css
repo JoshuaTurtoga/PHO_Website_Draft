@@ -674,7 +674,8 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 .facilities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 340px));
+  justify-content: center;
   gap: 1.5rem;
 }
 .facility-card {
@@ -971,8 +972,6 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 
   .hero { height: 75vh; min-height: 480px; }
   .hero-heading { font-size: clamp(2rem, 7vw, 3rem); }
-
-  .facilities-grid { grid-template-columns: 1fr 1fr; }
 
   .footer-main { grid-template-columns: 1fr; gap: 2rem; }
 }

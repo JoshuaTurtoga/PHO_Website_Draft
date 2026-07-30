@@ -204,12 +204,12 @@
       if (grid) {
         grid.innerHTML = services.cards.map((card) => {
           const theme = String(card.theme || 'lab').trim().toLowerCase();
-          const iconKey = String(card.icon_key || 'lab').trim().toLowerCase();
+          const iconContent = card.image_url ? `<img src="${escapeHtml(card.image_url)}" alt="${escapeHtml(card.front_title || '')}" style="width: 100%; height: 100%; object-fit: contain;">` : (DEFAULT_ICON[theme] || DEFAULT_ICON.lab);
           return `
             <a href="${escapeHtml(card.url || '#')}" class="flip-card">
               <div class="flip-card-inner">
                 <div class="flip-card-front">
-                  <div class="flip-card-icon">${DEFAULT_ICON[iconKey] || DEFAULT_ICON[theme] || DEFAULT_ICON.lab}</div>
+                  <div class="flip-card-icon">${iconContent}</div>
                   <h3 class="flip-card-title">${card.front_title_html || escapeHtml(card.front_title || '')}</h3>
                   <div class="flip-card-color-bar ${escapeHtml(theme)}"></div>
                 </div>
@@ -359,9 +359,10 @@
       const tag = card.url ? 'a' : 'div';
       const href = card.url ? ` href="${escapeHtml(card.url)}" target="${themeKey === 'lab' && /^https?:/.test(card.url) ? '_blank' : '_self'}"` : '';
       const rel = card.url && /^https?:/.test(card.url) ? ' rel="noreferrer"' : '';
+      const iconContent = card.image_url ? `<img src="${escapeHtml(card.image_url)}" alt="${escapeHtml(card.title || '')}" style="width: 100%; height: 100%; object-fit: contain;">` : DEFAULT_ICON[themeKey === 'promo' ? 'promo' : themeKey === 'hospital' ? 'hospital' : 'lab'];
       return `
         <${tag}${href}${rel} class="facility-card${themeKey === 'hospital' ? ' hospital' : themeKey === 'promo' ? ' promo' : ''}" style="${card.url ? 'text-decoration:none;color:inherit;display:block;' : ''}">
-          <div class="facility-icon-wrap">${DEFAULT_ICON[themeKey === 'promo' ? 'promo' : themeKey === 'hospital' ? 'hospital' : 'lab']}</div>
+          <div class="facility-icon-wrap">${iconContent}</div>
           <h3 class="facility-name">${escapeHtml(card.title || '')}</h3>
           <p class="facility-desc">${escapeHtml(card.description || '')}</p>
         </${tag}>
@@ -395,20 +396,43 @@
       </div>
     `;
 
-    const groupMarkup = Object.entries(groups).map(([groupName, groupCards]) => `
+    const groupDisplayNames = {
+      'Level II': 'DOH-Licensed Level II Hospitals',
+      'Level I': 'DOH-Licensed Level I Hospitals',
+      'Infirmaries': 'Infirmaries'
+    };
+
+    const groupOrder = ['Level II', 'Level I', 'Infirmaries'];
+    const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
+      const indexA = groupOrder.indexOf(a);
+      const indexB = groupOrder.indexOf(b);
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
+
+    const groupMarkup = sortedGroupKeys.map((groupKey) => {
+      const groupCards = groups[groupKey];
+      const displayName = groupDisplayNames[groupKey] || groupKey;
+      return `
       <div class="hospital-group">
-        <h3 class="hospital-group-title">${escapeHtml(groupName)}</h3>
+        <h3 class="hospital-group-title">${escapeHtml(displayName)}</h3>
         <div class="facilities-grid">
-          ${groupCards.map((card) => `
+          ${groupCards.map((card) => {
+            const iconContent = card.image_url ? `<img src="${escapeHtml(card.image_url)}" alt="${escapeHtml(card.title || '')}" style="width: 100%; height: 100%; object-fit: contain;">` : DEFAULT_ICON.hospital;
+            return `
             <a href="${escapeHtml(card.url || '#')}" class="facility-card hospital" style="text-decoration:none;color:inherit;display:block;">
-              <div class="facility-icon-wrap">${DEFAULT_ICON.hospital}</div>
+              <div class="facility-icon-wrap">${iconContent}</div>
               <h3 class="facility-name">${escapeHtml(card.title || '')}</h3>
               <p class="facility-desc">${escapeHtml(card.description || '')}</p>
             </a>
-          `).join('')}
+            `;
+          }).join('')}
         </div>
       </div>
-    `).join('');
+      `;
+    }).join('');
 
     section.innerHTML = `${header}${groupMarkup}`;
   }

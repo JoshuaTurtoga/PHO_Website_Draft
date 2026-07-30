@@ -139,7 +139,7 @@
           itemLabel: 'Service Card',
           itemFields: [
             { key: 'theme', label: 'Theme Class (lab, promo, hosp, or hospital)', type: 'text', placeholder: 'lab, promo, or hosp' },
-            { key: 'icon_key', label: 'Icon Key (lab, promo, hospital, contact)', type: 'text', placeholder: 'lab, promo, or hospital' },
+            { key: 'image_url', label: 'Icon Image', type: 'image' },
             { key: 'url', label: 'Destination URL', type: 'url', placeholder: 'laboratory.html' },
             { key: 'front_title_html', label: 'Front Title (HTML allowed e.g. Title<br>Subtitle)', type: 'richtext' },
             { key: 'back_title', label: 'Back Title', type: 'text' },
@@ -384,8 +384,7 @@
         { key: 'title', label: 'Title', type: 'text' },
         { key: 'description', label: 'Description', type: 'textarea' },
         { key: 'url', label: 'URL', type: 'url' },
-        { key: 'icon_key', label: 'Icon Key', type: 'text' },
-        { key: 'image_url', label: 'Image URL', type: 'image' }
+        { key: 'image_url', label: 'Icon Image', type: 'image' }
       ]
     },
     promotive_cards: {
@@ -397,8 +396,7 @@
         { key: 'title', label: 'Title', type: 'text' },
         { key: 'description', label: 'Description', type: 'textarea' },
         { key: 'url', label: 'URL', type: 'url' },
-        { key: 'icon_key', label: 'Icon Key', type: 'text' },
-        { key: 'image_url', label: 'Image URL', type: 'image' }
+        { key: 'image_url', label: 'Icon Image', type: 'image' }
       ]
     },
     hospital_cards: {
@@ -411,7 +409,8 @@
         { key: 'title', label: 'Card Title', type: 'text' },
         { key: 'description', label: 'Card Description', type: 'textarea' },
         { key: 'url', label: 'Destination URL', type: 'url' },
-        { key: 'license_group', label: 'Group Label', type: 'text' }
+        { key: 'image_url', label: 'Icon Image', type: 'image' },
+        { key: 'license_group', label: 'Group Label', type: 'select', options: ['Level I', 'Level II', 'Infirmaries'] }
       ]
     },
     contact_directory: {
@@ -739,6 +738,36 @@
         <div class="cms-field full">
           <label>${escapeHtml(field.label)}</label>
           <textarea class="${inputClass}" data-field-path="${escapeHtml(path)}" placeholder="${escapeHtml(field.placeholder || '')}">${inputValue}</textarea>
+        </div>
+      `;
+    }
+
+    if (field.type === 'select') {
+      const options = field.options || [];
+      let selectedLabel = 'Select Option'; // Placeholder
+      const optionsMarkup = options.map(opt => {
+        const optValue = typeof opt === 'object' ? opt.value : opt;
+        const optLabel = typeof opt === 'object' ? opt.label : opt;
+        const isSelected = String(value) === String(optValue);
+        if (isSelected) selectedLabel = optLabel;
+        return `<div class="cms-dropdown-option ${isSelected ? 'selected' : ''}" data-field-option-value="${escapeHtml(optValue)}">${escapeHtml(optLabel)}</div>`;
+      }).join('');
+      
+      return `
+        <div class="cms-field">
+          <label>${escapeHtml(field.label)}</label>
+          <div class="cms-custom-dropdown" data-custom-dropdown="true" style="margin-top:0.35rem;">
+            <div class="cms-dropdown-trigger" data-dropdown-trigger="true" style="padding: 0.85rem 0.95rem; border: 1px solid rgba(27,94,32,0.18); border-radius: 14px; justify-content: space-between; background: #fff;">
+              <span class="cms-dropdown-label">${escapeHtml(selectedLabel)}</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s;">
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <div class="cms-dropdown-menu" style="top: calc(100% + 5px);">
+              ${optionsMarkup}
+            </div>
+          </div>
+          <input type="hidden" class="cms-input" data-field-path="${escapeHtml(path)}" value="${escapeHtml(value || '')}">
         </div>
       `;
     }
@@ -1305,6 +1334,28 @@
           }
         }
         await loadView(targetViewId);
+        return;
+      }
+
+      const fieldOption = event.target.closest('[data-field-option-value]');
+      if (fieldOption) {
+        const dropdown = fieldOption.closest('.cms-custom-dropdown');
+        if (dropdown) dropdown.classList.remove('open');
+        
+        const value = fieldOption.dataset.fieldOptionValue;
+        const label = fieldOption.textContent.trim();
+        
+        const triggerLabel = dropdown.querySelector('.cms-dropdown-label');
+        if (triggerLabel) triggerLabel.textContent = label;
+        
+        const hiddenInput = dropdown.parentElement.querySelector('input[type="hidden"]');
+        if (hiddenInput) {
+           hiddenInput.value = value;
+           hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        
+        dropdown.querySelectorAll('.cms-dropdown-option').forEach(el => el.classList.remove('selected'));
+        fieldOption.classList.add('selected');
         return;
       }
 
