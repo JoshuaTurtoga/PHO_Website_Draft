@@ -1,0 +1,62 @@
+## Project Summary
+A hidden, authenticated admin CMS route for an existing website that lets a single admin role edit all page content (text, images, links, phone numbers, cards) currently hardcoded in the frontend, backed by Supabase (Postgres + Storage + Auth).
+
+## Tech Assumptions (adjust to match actual stack)
+- Frontend: React (state framework used by the existing site)
+- Backend/DB: Supabase (Postgres, Row Level Security, Auth, Storage for images)
+- Hidden login route: `/phoadmincmslogin` (not linked anywhere in nav; not indexed — add `noindex` meta + exclude from sitemap/robots.txt)
+
+## Core Architecture Decisions
+- **One `page_content` table pattern** using JSONB per section, rather than one bespoke table per page field. This keeps migrations small and lets the dashboard be generic (render a form from a schema) instead of one custom form per page.
+- **Separate tables only where a true repeating list exists** (hospital cards, lab cards, program cards, hospital services, contact directory entries) so admins can add/remove rows.
+- **Images** stored in a Supabase Storage bucket (`site-media`), tables store the storage path/URL only.
+- **Auth**: Supabase Auth, single `admin` role via a `profiles` table + RLS policy; no public sign-up — admin account created manually in Supabase dashboard or via seed SQL.
+
+---
+
+## Phase Breakdown (build & test in this order)
+
+### Phase 1 — Database schema
+Deliverable: one SQL migration file with comments, covering:
+- `profiles` (id references `auth.users`, role text default `'admin'`)
+- `page_sections` (generic JSONB content per page/section — for Navbar, Footer, Home, About, hero blocks, etc.)
+- `hospitals` (list + per-hospital hero/overview/contact/map fields)
+- `hospital_services` (repeating, FK to hospital, add/remove supported)
+- `hospital_programs` (repeating, FK to hospital, optional Covid-19 flag)
+- `lab_cards`, `promotive_cards`, `hospital_cards` (repeating cards for their respective landing sections)
+- `contact_directory` (repeating phone/email entries)
+- `emailjs_config` (service id, template id, public key — single row)
+- RLS: public **read-only** on all content tables; **write only** for authenticated admin role
+- Comments in the SQL explaining each table's purpose and how to run/apply the migration in the Supabase SQL editor
+
+### Phase 2 — Auth + hidden login + dashboard shell
+- `/phoadmincmslogin` page: email/password form using Supabase Auth, redirects to `/admin/dashboard` on success
+- Route guard: any `/admin/*` route requires a valid session + `profiles.role = 'admin'`
+- Dashboard shell with tabs/sidebar grouped by page (Navbar, Footer, Home, About Us, Laboratory, Promotive, Hospitals, Contact) — one tab per hospital nested under Hospitals
+
+### Phase 3 — Generic content editor
+- Reusable form component driven by a field schema (text, rich text, image upload, URL, phone) so most sections reuse the same component instead of one-off forms
+- Image upload widget → Supabase Storage → saves resulting URL into the JSONB field
+
+### Phase 4 — Repeating-card editors
+- Shared "card list" editor component (add / edit / delete / reorder) used for: Lab cards, Promotive cards, Hospital cards, Hospital services, Hospital programs (conditionally show Covid-19 card only if hospital has one), Contact directory entries
+
+### Phase 5 — Page-specific wiring
+Wire the generic components to each real page's fields:
+1. Navbar — logo, title text, nav labels
+2. Footer — logo, title/subtitle, tagline, quick links / contact info / government links (label + URL)
+3. Home — hero (image + text), services section (cards incl. flip-back text), About Us block + vision/mission/goals dropdown
+4. About Us page — hero, roots section, "How We Achieve Our Goals" (text + images), Sections & Units cards (hover-flip text + images), org structure images
+5. Laboratory page — hero, facility/lab cards (add/remove)
+6. Promotive page — hero, program/unit cards (add/remove)
+7. Hospitals page — hero, hospital cards (add/remove)
+8. Per-hospital tabs — hero (+ bg image), overview, contact card, "we offer" section, services (dropdown content, add/remove), programs & milestones (conditional Covid-19 card), map link
+9. Contact page — hero images, "Get in Touch" card, EmailJS config fields (service ID/template ID/public key), health directory (add/remove phone/email), PHO map link
+
+### Phase 6 — Frontend read integration
+Update the public-facing pages to fetch content from Supabase instead of hardcoded values, with sensible fallback/loading states.
+
+### Phase 7 — Hardening
+- `noindex` + robots exclusion for the hidden login route
+- Rate-limit login attempts
+- Confirm RLS actually blocks writes from non-admin/anon sessions (test with anon key)

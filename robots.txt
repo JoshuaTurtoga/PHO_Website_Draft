@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /phoadmincmslogin.html
+Disallow: /phoadmincms-dashboard.html
+Disallow: /admin/

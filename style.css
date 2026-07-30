@@ -498,10 +498,12 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 5px;
+  background: var(--green-primary);
 }
 .flip-card-color-bar.lab    { background: var(--green-primary); }
 .flip-card-color-bar.promo  { background: #e53935; }
-.flip-card-color-bar.hosp   { background: #1565c0; }
+.flip-card-color-bar.hosp,
+.flip-card-color-bar.hospital { background: #1565c0; }
 
 /* Back */
 .flip-card-back {
@@ -513,10 +515,12 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   padding: 2.5rem 2rem;
   text-align: center;
   color: var(--white);
+  background: linear-gradient(135deg, #1b5e20, #388e3c);
 }
 .flip-card-back.lab  { background: linear-gradient(135deg, #1b5e20, #388e3c); }
 .flip-card-back.promo { background: linear-gradient(135deg, #b71c1c, #e53935); }
-.flip-card-back.hosp { background: linear-gradient(135deg, #0d47a1, #1976d2); }
+.flip-card-back.hosp,
+.flip-card-back.hospital { background: linear-gradient(135deg, #0d47a1, #1976d2); }
 
 .flip-card-back-title {
   font-size: 1rem;

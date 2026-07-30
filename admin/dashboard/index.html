@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo/pho_logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/logo/pho_logo.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/logo/pho_logo.png" />
+  <title>PHO CMS Dashboard</title>
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../cms-admin.css" />
+</head>
+<body class="cms-admin-body" data-cms-dashboard="true">
+  <div class="cms-dashboard-shell">
+    <aside class="cms-sidebar">
+      <div class="cms-sidebar-brand">
+        <img src="../../assets/logo/pho_logo.png" alt="PHO Logo" />
+        <div class="cms-sidebar-title-wrapper">
+          <strong>Content Management System</strong>
+          <span>Bohol Provincial Health Office Website</span>
+        </div>
+      </div>
+      <div id="cms-sidebar-nav"></div>
+      <div class="cms-sidebar-footer">
+        <div class="cms-sidebar-profile">
+          <div class="cms-avatar">A</div>
+          <div>
+            <strong>Super Admin</strong>
+            <span id="cms-user-email">Admin</span>
+          </div>
+        </div>
+        <div class="cms-sidebar-actions">
+          <a class="cms-secondary-button" href="../../index.html" target="_blank" rel="noreferrer">Open Website</a>
+          <button type="button" class="cms-danger-button" data-cms-logout="true">Logout</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="cms-main">
+      <header class="cms-sticky-header">
+        <div class="cms-topbar">
+          <div class="cms-topbar-title">
+            <h1 id="cms-view-title">CMS Dashboard</h1>
+            <p id="cms-view-subtitle">Manage public-facing PHO website content.</p>
+          </div>
+          <div class="cms-actions-row" style="margin-top:0;">
+            <small class="cms-dirty-notice" style="display:none;">● Unsaved changes</small>
+            <button type="button" class="cms-secondary-button" data-cancel-view="true" disabled>Cancel</button>
+            <button type="button" class="cms-button" data-save-view="true" disabled>Save</button>
+          </div>
+        </div>
+        <div id="cms-tabs" class="cms-tabs"></div>
+      </header>
+
+      <div id="cms-view"></div>
+    </main>
+    <div id="cms-status" class="cms-status"></div>
+  </div>
+
+  <div id="cms-loader" class="cms-loader" aria-hidden="true">
+    <div class="cms-loader-panel">
+      <div class="cms-spinner"></div>
+      <p id="cms-loader-message">Loading dashboard...</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../../cms-config.js"></script>
+  <script src="../../cms-common.js"></script>
+  <script src="../../cms-admin.js"></script>
+</body>
+</html>
