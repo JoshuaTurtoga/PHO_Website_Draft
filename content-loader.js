@@ -484,18 +484,18 @@
               <p class="directory-card-subtitle">${escapeHtml(item.subtitle || '')}</p>
             </div>
             <div class="directory-info-list">
-              ${item.phone ? `
+              ${item.phone ? String(item.phone).split(/[\n,]+/).map(p => p.trim()).filter(Boolean).map(p => `
                 <div class="directory-info-item">
                   ${DEFAULT_ICON.contact}
-                  <span>${escapeHtml(item.phone)}</span>
+                  <span>${escapeHtml(p)}</span>
                 </div>
-              ` : ''}
-              ${item.email ? `
+              `).join('') : ''}
+              ${item.email ? String(item.email).split(/[\n,]+/).map(e => e.trim()).filter(Boolean).map(e => `
                 <div class="directory-info-item">
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                  <span><a href="mailto:${escapeHtml(item.email)}">${escapeHtml(item.email)}</a></span>
+                  <span><a href="mailto:${escapeHtml(e)}">${escapeHtml(e)}</a></span>
                 </div>
-              ` : ''}
+              `).join('') : ''}
               ${item.extra ? `<div class="directory-info-item"><span>${escapeHtml(item.extra)}</span></div>` : ''}
             </div>
           </div>

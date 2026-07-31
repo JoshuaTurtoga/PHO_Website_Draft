@@ -421,8 +421,8 @@
       fields: [
         { key: 'title', label: 'Title', type: 'text' },
         { key: 'subtitle', label: 'Subtitle', type: 'text' },
-        { key: 'phone', label: 'Phone', type: 'phone' },
-        { key: 'email', label: 'Email', type: 'text' },
+        { key: 'phone', label: 'Phone (one per line)', type: 'textarea' },
+        { key: 'email', label: 'Email (one per line)', type: 'textarea' },
         { key: 'extra', label: 'Extra Details', type: 'textarea' }
       ]
     },
@@ -553,8 +553,18 @@
     });
   }
 
+  function generateUUID() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   function createBlankItem(fields) {
-    const item = {};
+    const item = { id: generateUUID() };
     (fields || []).forEach((field) => {
       if (field.type === 'repeater') {
         item[field.key] = [];
@@ -1077,10 +1087,15 @@
         const schema = state.currentSchema;
         const existingRows = await client.from(schema.table).select('id');
         const existingIds = new Set((existingRows?.data || []).map((row) => row.id));
-        const nextRecords = (state.currentData.records || []).map((record, index) => ({
-          ...record,
-          sort_order: index + 1
-        }));
+        const nextRecords = (state.currentData.records || []).map((record, index) => {
+          const payload = { id: record.id, sort_order: index + 1 };
+          schema.fields.forEach(f => {
+            if (record[f.key] !== undefined) {
+              payload[f.key] = record[f.key];
+            }
+          });
+          return payload;
+        });
         const keepIds = new Set(nextRecords.map((row) => row.id).filter(Boolean));
         const deleteIds = [...existingIds].filter((id) => !keepIds.has(id));
 
