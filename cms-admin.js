@@ -1161,7 +1161,10 @@
 
         if (services.length) {
           const result = await client.from('hospital_services').upsert(
-            services.map((entry) => ({ ...entry, hospital_id: hospitalId }))
+            services.map((entry) => {
+              const { created_at, updated_at, ...rest } = entry;
+              return { ...rest, hospital_id: hospitalId };
+            })
           );
           if (result.error) {
             throw result.error;
@@ -1170,7 +1173,10 @@
 
         if (programs.length) {
           const result = await client.from('hospital_programs').upsert(
-            programs.map((entry) => ({ ...entry, hospital_id: hospitalId }))
+            programs.map((entry) => {
+              const { created_at, updated_at, ...rest } = entry;
+              return { ...rest, hospital_id: hospitalId };
+            })
           );
           if (result.error) {
             throw result.error;
@@ -1217,7 +1223,16 @@
 
     const currentGroup = allGroups.find(g => g.title === state.currentGroup);
     if (!currentGroup || !currentGroup.items || !currentGroup.items.length) {
-      tabsContainer.innerHTML = '';
+      if (state.currentGroup === 'Hospitals') {
+        tabsContainer.innerHTML = `
+          <div class="cms-empty-notice">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-3v3h-4v-3H7v-4h3V6h4v3h3v4z"/></svg>
+            <span>No hospitals found in database. Please run the SQL setup script in your Supabase project first.</span>
+          </div>
+        `;
+      } else {
+        tabsContainer.innerHTML = '';
+      }
       return;
     }
 
@@ -1401,6 +1416,21 @@
         
         state.currentGroup = targetGroup;
         
+        if (targetGroup === 'Hospitals') {
+          renderSidebar();
+          setLoading(true, 'Loading hospitals...');
+          try {
+            await loadHospitalList();
+          } finally {
+            setLoading(false, 'Loading hospitals...');
+          }
+          const firstHospital = state.hospitals[0];
+          if (firstHospital) {
+            await loadView(`hospital:${firstHospital.slug}`);
+          }
+          return;
+        }
+
         const allGroups = [
           ...navigationGroups,
           { title: 'Hospitals', items: state.hospitals.map(h => `hospital:${h.slug}`) }
@@ -1556,55 +1586,36 @@
   }
 
   function findFieldByPath(path) {
-    const root = String(path).split('.')[0];
-
-    const search = (fields) => {
-      for (const field of fields || []) {
-        if (field.key === root) {
-          return field;
-        }
-        if (field.type === 'repeater') {
-          const childMatch = search(field.itemFields);
-          if (childMatch) {
-            return childMatch;
-          }
-        }
-      }
-      return null;
-    };
-
+    let rootFields = [];
     if (state.currentMode === 'section' || state.currentMode === 'single-table') {
-      return search(state.currentSchema.fields);
+      rootFields = state.currentSchema.fields;
+    } else if (state.currentMode === 'table') {
+      rootFields = [
+        { key: 'records', type: 'repeater', itemFields: state.currentSchema.fields }
+      ];
+    } else if (state.currentMode === 'hospital') {
+      rootFields = [
+        ...hospitalFieldSchema.fields,
+        { key: 'services', type: 'repeater', itemFields: hospitalFieldSchema.serviceFields },
+        { key: 'programs', type: 'repeater', itemFields: hospitalFieldSchema.programFields }
+      ];
     }
 
-    if (state.currentMode === 'table') {
-      return path === 'records'
-        ? {
-            key: 'records',
-            type: 'repeater',
-            itemFields: state.currentSchema.fields
-          }
-        : search(state.currentSchema.fields);
-    }
+    const schemaKeys = String(path).split('.').filter(p => isNaN(Number(p)));
+    let currentFields = rootFields;
+    let matchedField = null;
 
-    if (state.currentMode === 'hospital') {
-      if (path === 'services') {
-        return { key: 'services', type: 'repeater', itemFields: hospitalFieldSchema.serviceFields };
-      }
-      if (path === 'programs') {
-        return { key: 'programs', type: 'repeater', itemFields: hospitalFieldSchema.programFields };
-      }
-
-      const fieldGroups = [hospitalFieldSchema.fields, hospitalFieldSchema.serviceFields, hospitalFieldSchema.programFields];
-      for (const group of fieldGroups) {
-        const result = search(group);
-        if (result) {
-          return result;
-        }
+    for (const key of schemaKeys) {
+      matchedField = currentFields?.find(f => f.key === key);
+      if (!matchedField) return null;
+      if (matchedField.type === 'repeater') {
+        currentFields = matchedField.itemFields;
+      } else {
+        currentFields = [];
       }
     }
 
-    return null;
+    return matchedField;
   }
 
   async function guardDashboard() {

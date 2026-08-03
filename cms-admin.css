@@ -784,3 +784,23 @@ select.cms-input {
   gap: 0.75rem;
 }
 
+/* Empty state notice (e.g. Hospitals tab with no DB records) */
+.cms-empty-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.25rem;
+  background: rgba(46, 125, 50, 0.06);
+  border: 1px solid rgba(46, 125, 50, 0.2);
+  border-radius: 10px;
+  color: var(--cms-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0.5rem 0;
+}
+.cms-empty-notice svg {
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+

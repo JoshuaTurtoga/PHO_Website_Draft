@@ -45,7 +45,7 @@
   }
 
   function setText(selector, value) {
-    if (!value) {
+    if (value == null) {
       return;
     }
     document.querySelectorAll(selector).forEach((node) => {
@@ -63,7 +63,7 @@
   }
 
   function setImageSource(selector, value) {
-    if (!value) {
+    if (value == null) {
       return;
     }
 
@@ -159,7 +159,12 @@
       contactItems[0].querySelector('span')?.replaceChildren(document.createTextNode(footer.phone));
     }
     if (contactItems[1] && Array.isArray(footer.emails) && footer.emails.length) {
-      contactItems[1].querySelector('span').innerHTML = footer.emails.map((email) => (
+      const emailSpan = contactItems[1].querySelector('span');
+      // Normalize styling: remove any flex column layout from static HTML
+      emailSpan.style.display = 'inline';
+      emailSpan.style.flexDirection = 'unset';
+      emailSpan.style.gap = 'unset';
+      emailSpan.innerHTML = footer.emails.map((email) => (
         `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`
       )).join('<br>');
     }
@@ -507,158 +512,183 @@
   }
 
   function renderHospitalDetail(hospital, services, programs) {
-    if (!hospital) {
-      return;
-    }
+    if (!hospital) return;
 
     const main = document.querySelector('main');
-    if (!main) {
-      return;
+    if (!main) return;
+
+    setImageSource('.hospital-hero', hospital.hero_image_url);
+    setText('.hospital-hero-title', hospital.hero_title || hospital.name);
+    setText('.hospital-hero-subtitle', hospital.hero_subtitle || hospital.location_text);
+
+    const welcomeMain = document.querySelector('.welcome-main');
+    if (welcomeMain) {
+      const titleEl = welcomeMain.querySelector('.section-title');
+      if (titleEl) titleEl.textContent = hospital.overview_title || `Welcome to ${hospital.short_name || hospital.name || 'Our Hospital'}`;
+      
+      const quoteEl = welcomeMain.querySelector('.hospital-quote');
+      if (quoteEl) {
+        if (hospital.quote) {
+          quoteEl.textContent = hospital.quote;
+          quoteEl.style.display = '';
+        } else {
+          quoteEl.style.display = 'none';
+        }
+      }
+      
+      const bodyEl = welcomeMain.querySelector('.welcome-text');
+      if (bodyEl) bodyEl.textContent = hospital.overview_body || '';
+
+      const weOffer = welcomeMain.querySelector('.we-offer-container');
+      if (weOffer) {
+        if (hospital.offer_title || hospital.offer_body) {
+          weOffer.style.display = '';
+          const offerHeading = weOffer.querySelector('.offer-heading');
+          if (offerHeading) offerHeading.textContent = hospital.offer_heading || 'We Offer:';
+          const offerLabel = weOffer.querySelector('.offer-label');
+          if (offerLabel) offerLabel.textContent = hospital.offer_title || '';
+          const offerValue = weOffer.querySelector('.offer-value');
+          if (offerValue) offerValue.textContent = hospital.offer_body || '';
+        } else {
+          weOffer.style.display = 'none';
+        }
+      }
     }
 
-    const serviceMarkup = (services || []).map((service) => `
-      <div class="service-detail-card">
-        <div class="service-card-header">
-          <div class="service-card-icon">${DEFAULT_ICON.hospital}</div>
-          <h3 class="service-card-title">${escapeHtml(service.title || '')}</h3>
-        </div>
-        <div class="service-card-content-wrapper">
-          ${service.intro ? `<p class="facility-desc" style="margin-bottom:1rem;">${escapeHtml(service.intro)}</p>` : ''}
-          <div class="service-list">
-            ${(Array.isArray(service.items) ? service.items : []).map((item) => {
-              if (typeof item === 'string') {
-                return `<div class="service-list-item"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg><span>${escapeHtml(item)}</span></div>`;
-              }
+    const contactItems = document.querySelectorAll('.contact-item');
+    contactItems.forEach(ci => {
+      const labelEl = ci.querySelector('.contact-label');
+      if (!labelEl) return;
+      const label = labelEl.textContent.trim().toLowerCase();
+      
+      if (label.includes('phone') && hospital.phone) {
+        const a = ci.querySelector('a');
+        if (a) {
+          a.textContent = hospital.phone;
+          a.href = `tel:${hospital.phone.replace(/[^0-9+]/g, '')}`;
+        }
+      } else if (label.includes('email') && (hospital.email_primary || hospital.email_secondary)) {
+        const linksContainer = ci.querySelector('span[style*="flex"]') || ci.querySelectorAll('a')[0]?.parentElement;
+        if (linksContainer) {
+           let html = '';
+           if (hospital.email_primary) html += `<a href="mailto:${escapeHtml(hospital.email_primary)}">${escapeHtml(hospital.email_primary)}</a>`;
+           if (hospital.email_secondary) html += `<a href="mailto:${escapeHtml(hospital.email_secondary)}">${escapeHtml(hospital.email_secondary)}</a>`;
+           linksContainer.innerHTML = html;
+        }
+      } else if (label.includes('location') && hospital.location_text) {
+        const spans = ci.querySelectorAll('span');
+        if (spans.length > 1) {
+           spans[1].textContent = hospital.location_text;
+        }
+      } else if (label.includes('facebook') && hospital.facebook_url) {
+        const a = ci.querySelector('a');
+        if (a) {
+          a.textContent = hospital.facebook_label || hospital.name;
+          a.href = hospital.facebook_url;
+        }
+      }
+    });
 
-              const children = Array.isArray(item.items) ? item.items : [];
-              return `
-                ${item.title ? `<div class="service-sublist-title">${escapeHtml(item.title)}</div>` : ''}
-                <div class="service-sublist-scroll">
-                  <div class="service-sublist-grid">
-                    ${children.map((child) => `<div class="service-sub-item">${escapeHtml(child)}</div>`).join('')}
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      </div>
-    `).join('');
+    if (hospital.map_embed_url) {
+      const iframe = document.querySelector('.hospital-location-section iframe');
+      if (iframe) iframe.src = hospital.map_embed_url;
+    }
+    if (hospital.map_link_url) {
+      const a = document.querySelector('.hospital-location-section a.btn-primary');
+      if (a) a.href = hospital.map_link_url;
+    }
 
-    const programMarkup = (programs || []).map((program) => `
-      <div class="milestone-card${program.is_covid ? ' covid' : ''}">
-        ${program.badge ? `<div class="milestone-year">${escapeHtml(program.badge)}</div>` : ''}
-        <div class="milestone-content">
-          <h3>${escapeHtml(program.title || '')}</h3>
-          <span>${escapeHtml(program.body || '')}</span>
-        </div>
-      </div>
-    `).join('');
-
-    main.innerHTML = `
-      <section class="hospital-hero" style="background-image: url('${escapeHtml(hospital.hero_image_url || '')}');">
-        <div class="hospital-hero-content">
-          <h1 class="hospital-hero-title">${escapeHtml(hospital.hero_title || hospital.name || '')}</h1>
-          <p class="hospital-hero-subtitle">${escapeHtml(hospital.hero_subtitle || hospital.location_text || '')}</p>
-        </div>
-      </section>
-
-      <section class="hospital-welcome-section">
-        <div class="container">
-          <div class="welcome-layout">
-            <div class="welcome-main">
-              <p class="section-eyebrow">Overview</p>
-              <h2 class="section-title">${escapeHtml(hospital.overview_title || `Welcome to ${hospital.short_name || hospital.name || 'Our Hospital'}`)}</h2>
-              ${hospital.quote ? `<blockquote class="hospital-quote">${escapeHtml(hospital.quote)}</blockquote>` : ''}
-              <p class="welcome-text">${escapeHtml(hospital.overview_body || '')}</p>
-              ${(hospital.offer_title || hospital.offer_body) ? `
-                <div class="we-offer-container">
-                  <h4 class="offer-heading">${escapeHtml(hospital.offer_heading || 'We Offer:')}</h4>
-                  <div class="offer-grid">
-                    <div class="offer-item">
-                      <div class="offer-details">
-                        <span class="offer-label">${escapeHtml(hospital.offer_title || '')}</span>
-                        <span class="offer-value" style="font-size:0.85rem;font-weight:normal;margin-top:4px;display:block;line-height:1.4;">${escapeHtml(hospital.offer_body || '')}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ` : ''}
-            </div>
-            <div class="welcome-sidebar">
-              <div class="contact-card">
-                <h3>Contact Information</h3>
-                ${hospital.phone ? `
-                  <div class="contact-item">
-                    ${DEFAULT_ICON.contact}
-                    <div><span class="contact-label">Phone</span><a href="tel:${escapeHtml(hospital.phone.replace(/[^0-9+]/g, ''))}">${escapeHtml(hospital.phone)}</a></div>
-                  </div>
-                ` : ''}
-                ${(hospital.email_primary || hospital.email_secondary) ? `
-                  <div class="contact-item">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                    <div>
-                      <span class="contact-label">Email</span>
-                      <span style="display:flex;flex-direction:column;gap:0;">
-                        ${hospital.email_primary ? `<a href="mailto:${escapeHtml(hospital.email_primary)}">${escapeHtml(hospital.email_primary)}</a>` : ''}
-                        ${hospital.email_secondary ? `<a href="mailto:${escapeHtml(hospital.email_secondary)}">${escapeHtml(hospital.email_secondary)}</a>` : ''}
-                      </span>
-                    </div>
-                  </div>
-                ` : ''}
-                ${hospital.location_text ? `
-                  <div class="contact-item">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <div><span class="contact-label">Location</span><span>${escapeHtml(hospital.location_text)}</span></div>
-                  </div>
-                ` : ''}
-                ${hospital.facebook_url ? `
-                  <div class="contact-item">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-                    <div><span class="contact-label">Facebook</span><a href="${escapeHtml(hospital.facebook_url)}" target="_blank" rel="noreferrer">${escapeHtml(hospital.facebook_label || hospital.name || '')}</a></div>
-                  </div>
-                ` : ''}
+    const serviceGrid = document.querySelector('.hospital-services-grid');
+    if (serviceGrid && Array.isArray(services)) {
+      const existingCards = Array.from(serviceGrid.querySelectorAll('.service-detail-card'));
+      serviceGrid.innerHTML = '';
+      
+      services.forEach((service, index) => {
+        const card = existingCards[index];
+        let iconHtml = DEFAULT_ICON.hospital;
+        if (card) {
+           const iconEl = card.querySelector('.service-card-icon');
+           if (iconEl) iconHtml = iconEl.innerHTML;
+        }
+        
+        // items can be a pre-parsed JS array (Supabase JSONB) or a JSON string (legacy)
+        let itemsArray = service.items;
+        if (typeof itemsArray === 'string') {
+          try { itemsArray = JSON.parse(itemsArray); } catch { itemsArray = []; }
+        }
+        const listMarkup = (Array.isArray(itemsArray) ? itemsArray : []).map((item) => {
+          if (typeof item === 'string') {
+            return `<div class="service-list-item"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>${escapeHtml(item)}</span></div>`;
+          }
+          const children = Array.isArray(item.items) ? item.items : [];
+          return `
+            ${item.title ? `<div class="service-sublist-title">${escapeHtml(item.title)}</div>` : ''}
+            <div class="service-sublist-scroll">
+              <div class="service-sublist-grid">
+                ${children.map((child) => `<div class="service-sub-item">${escapeHtml(child)}</div>`).join('')}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="hospital-services-section">
-        <div class="container">
-          <div class="section-header center">
-            <p class="section-eyebrow">Medical Offerings</p>
-            <h2 class="section-title">Our Services</h2>
-            <p class="section-subtitle">We provide a wide array of specialized clinical diagnostic, surgical, and therapeutic services.</p>
-          </div>
-          <div class="hospital-services-grid">${serviceMarkup}</div>
-        </div>
-      </section>
-
-      <section class="hospital-activities-section">
-        <div class="container">
-          <div class="section-header center">
-            <p class="section-eyebrow">Programs & Milestones</p>
-            <h2 class="section-title">Highlights</h2>
-            <p class="section-subtitle">A look into the hospital programs, milestones, and major service updates.</p>
-          </div>
-          <div class="milestones-grid">${programMarkup}</div>
-        </div>
-      </section>
-
-      ${(hospital.map_embed_url || hospital.map_link_url) ? `
-        <section class="hospital-location-section">
-          <div class="container">
-            <div class="section-header center">
-              <p class="section-eyebrow">Location</p>
-              <h2 class="section-title">Find Us</h2>
+          `;
+        }).join('');
+        
+        const cardHtml = `
+          <div class="service-detail-card">
+            <div class="service-card-header">
+              <div class="service-card-icon">${iconHtml}</div>
+              <h3 class="service-card-title">${escapeHtml(service.title || '')}</h3>
             </div>
-            ${hospital.map_embed_url ? `<iframe src="${escapeHtml(hospital.map_embed_url)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>` : ''}
-            ${hospital.map_link_url ? `<p style="text-align:center;margin-top:1rem;"><a class="btn-primary" href="${escapeHtml(hospital.map_link_url)}" target="_blank" rel="noreferrer">Open In Maps</a></p>` : ''}
+            <div class="service-card-content-wrapper">
+              ${service.intro ? `<p class="facility-desc" style="margin-bottom:1rem;">${escapeHtml(service.intro)}</p>` : ''}
+              <div class="service-list">${listMarkup}</div>
+            </div>
           </div>
-        </section>
-      ` : ''}
-    `;
+        `;
+        serviceGrid.insertAdjacentHTML('beforeend', cardHtml);
+      });
+    }
+
+    // Programs → activity-card-box elements inside .activities-grid-layout or .activities-single-layout
+    const activitiesGrid = document.querySelector('.activities-grid-layout, .activities-single-layout');
+    if (activitiesGrid && Array.isArray(programs) && programs.length) {
+      // Preserve the SVG icons from the existing static boxes
+      const existingBoxes = Array.from(activitiesGrid.querySelectorAll('.activity-card-box'));
+      const starSvg = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+      const shieldSvg = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+      const checkSvg = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+
+      activitiesGrid.innerHTML = programs.map((program, index) => {
+        // Parse body — may be a JSON array of items or a plain string
+        let listItems = [];
+        try {
+          const parsed = JSON.parse(program.body || '[]');
+          listItems = Array.isArray(parsed) ? parsed : (program.body ? [program.body] : []);
+        } catch {
+          listItems = program.body ? [program.body] : [];
+        }
+
+        // Try to preserve existing icon SVG from the static box at this position
+        let iconSvg = program.is_covid ? shieldSvg : starSvg;
+        if (existingBoxes[index]) {
+          const existingH3 = existingBoxes[index].querySelector('h3');
+          if (existingH3) {
+            const existingSvg = existingH3.querySelector('svg');
+            if (existingSvg) iconSvg = existingSvg.outerHTML;
+          }
+        }
+
+        const isCovid = program.is_covid;
+        const listMarkup = listItems.map(item =>
+          `<div class="activity-list-item">${checkSvg}<span>${escapeHtml(String(item))}</span></div>`
+        ).join('');
+
+        return `
+          <div class="activity-card-box${isCovid ? ' covid' : ''}">
+            <h3>${iconSvg}${escapeHtml(program.title || '')}</h3>
+            <div class="activity-list">${listMarkup}</div>
+          </div>
+        `;
+      }).join('');
+    }
   }
 
   async function fetchPublicContent(page) {
