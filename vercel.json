@@ -1,0 +1,4 @@
+{
+  "outputDirectory": ".",
+  "buildCommand": "sed -i \"s|YOUR_SUPABASE_URL|$SUPABASE_URL|g\" cms-config.js && sed -i \"s|YOUR_SUPABASE_ANON_KEY|$SUPABASE_ANON_KEY|g\" cms-config.js"
+}
