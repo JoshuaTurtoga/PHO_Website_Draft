@@ -1,6 +1,6 @@
 (function initPhoCmsConfig() {
-  const DEFAULT_SUPABASE_URL = 'https://fkomkxvqwzpbhyyqlkdm.supabase.co';
-  const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_RJG5aNpvfJLf808OtVHxhw_RYkbkhBd';
+  const DEFAULT_SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const DEFAULT_SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   const existing = window.PHO_CMS_CONFIG || {};
   const config = {
