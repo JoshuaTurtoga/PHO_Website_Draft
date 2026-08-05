@@ -194,6 +194,106 @@ select.cms-input {
   color: var(--cms-text);
 }
 
+/* ---- Login Inline Notice / Error ---- */
+
+.cms-login-notice {
+  display: none;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.45;
+  animation: cms-notice-slide-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cms-login-notice.visible {
+  display: flex;
+}
+
+.cms-login-notice .cms-notice-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+}
+
+.cms-login-notice .cms-notice-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cms-login-notice .cms-notice-title {
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+}
+
+.cms-login-notice .cms-notice-message {
+  opacity: 0.88;
+}
+
+.cms-login-notice .cms-notice-dismiss {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  color: inherit;
+  line-height: 1;
+  font-size: 1.15rem;
+}
+
+.cms-login-notice .cms-notice-dismiss:hover {
+  opacity: 1;
+}
+
+/* Error variant (red) */
+.cms-login-notice.error {
+  background: rgba(198, 40, 40, 0.08);
+  border: 1px solid rgba(198, 40, 40, 0.22);
+  color: #7f1d1d;
+}
+
+.cms-login-notice.error .cms-notice-icon {
+  color: #c62828;
+}
+
+/* Warning variant (amber) */
+.cms-login-notice.warning {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  color: #78350f;
+}
+
+.cms-login-notice.warning .cms-notice-icon {
+  color: #d97706;
+}
+
+/* Info variant (blue) */
+.cms-login-notice.info {
+  background: rgba(37, 99, 235, 0.07);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  color: #1e3a5f;
+}
+
+.cms-login-notice.info .cms-notice-icon {
+  color: #2563eb;
+}
+
+@keyframes cms-notice-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .cms-loader {
   position: fixed;
   inset: 0;
