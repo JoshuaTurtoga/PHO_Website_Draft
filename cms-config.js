@@ -10,7 +10,7 @@
     contentTimeoutMs: 8000,
     authTimeoutMs: 10000,
     authWatchdogMs: 15000,
-    loginRoute: '/phoadmincmslogin.html',
+    loginRoute: '/admin/dashboard/index.html',
     dashboardRoute: '/admin/dashboard/index.html',
     legacyDashboardRoute: '/phoadmincms-dashboard.html'
   };
