@@ -70,6 +70,15 @@
     }
 
     document.querySelectorAll(selector).forEach((node) => {
+      if (!value) {
+        if (node.tagName === 'IMG') {
+          node.removeAttribute('src');
+        } else {
+          node.style.backgroundImage = '';
+        }
+        return;
+      }
+
       if (node.tagName === 'IMG') {
         node.src = value;
       } else {
