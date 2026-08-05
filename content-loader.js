@@ -11,25 +11,27 @@
   };
 
   function getCurrentPage() {
-    const fileName = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
-    const match = fileName.match(/^hospital-(.+)\.html$/);
+    const rawSegment = (window.location.pathname.split('/').pop() || '').toLowerCase();
+    const fileName = rawSegment.replace(/\.html$/, '');
+    const match = fileName.match(/^hospital-(.+)$/);
 
     if (match) {
-      return { key: 'hospital-detail', slug: match[1], fileName };
+      return { key: 'hospital-detail', slug: match[1], fileName: fileName + '.html' };
     }
 
     const pageMap = {
       '': { key: 'home', fileName: 'index.html' },
-      'index.html': { key: 'home', fileName: 'index.html' },
-      'more-about-us.html': { key: 'about', fileName },
-      'laboratory.html': { key: 'laboratory', fileName },
-      'promotive.html': { key: 'promotive', fileName },
-      'hospitals.html': { key: 'hospitals', fileName },
-      'contact-us.html': { key: 'contact', fileName }
+      'index': { key: 'home', fileName: 'index.html' },
+      'more-about-us': { key: 'about', fileName: 'more-about-us.html' },
+      'laboratory': { key: 'laboratory', fileName: 'laboratory.html' },
+      'promotive': { key: 'promotive', fileName: 'promotive.html' },
+      'hospitals': { key: 'hospitals', fileName: 'hospitals.html' },
+      'contact-us': { key: 'contact', fileName: 'contact-us.html' }
     };
 
-    return pageMap[fileName] || { key: 'unknown', fileName };
+    return pageMap[fileName] || { key: 'unknown', fileName: fileName + '.html' };
   }
+
 
   function toSectionMap(rows) {
     return (rows || []).reduce((acc, row) => {

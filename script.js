@@ -206,41 +206,43 @@
   }
 
   function initActiveNavHighlight() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const pathSegment = window.location.pathname.split('/').pop() || '';
+    const currentPage = pathSegment.replace(/\.html$/, '');
     document.querySelectorAll('.nav-link').forEach((link) => {
       link.classList.remove('active');
       const href = link.getAttribute('href');
 
       if (
+        href === '/' + currentPage ||
         href === currentPage ||
-        (currentPage === '' && href === 'index.html') ||
-        (currentPage === 'index.html' && href === 'index.html')
+        (currentPage === '' && (href === '/' || href === '')) ||
+        (currentPage === 'index' && (href === '/' || href === ''))
       ) {
         link.classList.add('active');
       }
 
       if (
         [
-          'laboratory.html',
-          'promotive.html',
-          'hospitals.html',
-          'hospital-gmph.html',
-          'hospital-cdh.html',
-          'hospital-fdmh.html',
-          'hospital-tbgdh.html',
-          'hospital-csgtmh.html',
-          'hospital-canch.html',
-          'hospital-cnpcmh.html',
-          'hospital-clach.html',
-          'hospital-mch.html',
-          'hospital-cpgmh.html'
+          'laboratory',
+          'promotive',
+          'hospitals',
+          'hospital-gmph',
+          'hospital-cdh',
+          'hospital-fdmh',
+          'hospital-tbgdh',
+          'hospital-csgtmh',
+          'hospital-canch',
+          'hospital-cnpcmh',
+          'hospital-clach',
+          'hospital-mch',
+          'hospital-cpgmh'
         ].includes(currentPage) &&
-        href === 'index.html#services'
+        (href === '/#services' || href === '/#services')
       ) {
         link.classList.add('active');
       }
 
-      if (currentPage === 'more-about-us.html' && (href === 'more-about-us.html' || href === 'index.html#about')) {
+      if (currentPage === 'more-about-us' && (href === '/more-about-us' || href === '/#about')) {
         link.classList.add('active');
       }
     });

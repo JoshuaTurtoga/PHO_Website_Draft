@@ -40,7 +40,7 @@
     try {
       const auth = await cms.requireAdmin?.();
       if (auth?.isAdmin) {
-        window.location.href = config.dashboardRoute || '/admin/dashboard/index.html';
+        window.location.href = config.dashboardRoute || '/admin/dashboard';
         return;
       }
     } catch (error) {
@@ -66,7 +66,7 @@
 
       try {
         await cms.login?.(email, password);
-        window.location.href = config.dashboardRoute || '/admin/dashboard/index.html';
+        window.location.href = config.dashboardRoute || '/admin/dashboard';
       } catch (error) {
         setStatus(error.message || 'Unable to sign in right now.', 'error');
       } finally {

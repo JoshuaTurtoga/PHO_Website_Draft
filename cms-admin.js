@@ -140,7 +140,7 @@
           itemFields: [
             { key: 'theme', label: 'Theme Class (lab, promo, hosp, or hospital)', type: 'text', placeholder: 'lab, promo, or hosp' },
             { key: 'image_url', label: 'Icon Image', type: 'image' },
-            { key: 'url', label: 'Destination URL', type: 'url', placeholder: 'laboratory.html' },
+            { key: 'url', label: 'Destination URL', type: 'url', placeholder: '/laboratory' },
             { key: 'front_title_html', label: 'Front Title (HTML allowed e.g. Title<br>Subtitle)', type: 'richtext' },
             { key: 'back_title', label: 'Back Title', type: 'text' },
             { key: 'back_description', label: 'Back Description', type: 'textarea' },
@@ -1548,7 +1548,7 @@
       if (logoutButton) {
         setLoading(true, 'Signing out...');
         await cms.logout?.();
-        window.location.href = window.PHO_CMS_CONFIG?.loginRoute || '/phoadmincmslogin.html';
+        window.location.href = window.PHO_CMS_CONFIG?.loginRoute || '/phoadmincmslogin';
       }
     });
 
@@ -1625,7 +1625,7 @@
 
     const auth = await cms.requireAdmin?.();
     if (!auth?.isAdmin) {
-      window.location.href = window.PHO_CMS_CONFIG?.loginRoute || '/phoadmincmslogin.html';
+      window.location.href = window.PHO_CMS_CONFIG?.loginRoute || '/phoadmincmslogin';
       return false;
     }
 
