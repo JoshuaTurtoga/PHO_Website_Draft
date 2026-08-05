@@ -40,14 +40,19 @@ body.cms-admin-body {
 .cms-auth-brand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
 .cms-auth-brand img {
-  width: 64px;
-  height: 64px;
+  width: 88px;
+  height: 88px;
   object-fit: contain;
+}
+
+.cms-auth-brand > div {
+  border-left: 2px solid rgba(27, 94, 32, 0.18);
+  padding-left: 1.25rem;
 }
 
 .cms-auth-title {

@@ -1,0 +1,87 @@
+# =============================================================
+# PHO Website - Apache (.htaccess) Configuration
+# =============================================================
+# Place this file in the website root directory.
+# Requires: mod_rewrite enabled (most shared/gov hosting has it)
+# =============================================================
+
+# ---- Prevent Directory Listing ----
+Options -Indexes
+
+# ---- Block Access to Sensitive Files & Directories ----
+<FilesMatch "\.(env|sql|gitignore|md)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Block access to .git directory
+  RewriteRule ^\.git(/|$) - [F,L]
+
+  # Block access to supabase directory
+  RewriteRule ^supabase(/|$) - [F,L]
+
+  # Block access to node_modules (if any)
+  RewriteRule ^node_modules(/|$) - [F,L]
+
+  # Block access to admin-related config files directly
+  RewriteRule ^cms-config\.js$ - [L]
+
+  # ---- Clean URLs ----
+
+  # 1) Redirect .html requests to clean URLs (301 permanent redirect)
+  #    /contact-us.html  -->  /contact-us
+  #    /hospitals.html    -->  /hospitals
+  #    Exception: index.html redirects to /
+  RewriteCond %{THE_REQUEST} \s/index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [R=301,L]
+
+  RewriteCond %{THE_REQUEST} \s/(.+?)\.html[\s?] [NC]
+  RewriteRule ^(.+?)\.html$ /$1 [R=301,L]
+
+  # 2) Internally rewrite clean URLs to the actual .html files
+  #    /contact-us  -->  serves contact-us.html (URL stays clean)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+</IfModule>
+
+# ---- Security Headers ----
+<IfModule mod_headers.c>
+  # Prevent clickjacking
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Prevent MIME-type sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Enable XSS filter
+  Header always set X-XSS-Protection "1; mode=block"
+
+  # Referrer policy
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Permissions policy (restrict sensitive browser APIs)
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+  # Remove server version info (if possible)
+  Header unset X-Powered-By
+  Header unset Server
+</IfModule>
+
+# ---- Caching for Static Assets ----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ---- UTF-8 Encoding ----
+AddDefaultCharset UTF-8
