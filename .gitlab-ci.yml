@@ -1,19 +1,18 @@
 # GitLab Pages deployment configuration
 # This pipeline deploys the static site to GitLab Pages
 
-image: alpine:latest
-
 pages:
   stage: deploy
   script:
-    - mkdir -p public
-    - cp -r *.html *.css *.js public/ 2>/dev/null || true
-    - cp -r assets public/ 2>/dev/null || true
-    - cp -r admin public/ 2>/dev/null || true
-    - cp -r supabase public/ 2>/dev/null || true
-    - cp robots.txt public/ 2>/dev/null || true
+    - New-Item -ItemType Directory -Force -Path public
+    - Copy-Item -Path *.html,*.css,*.js -Destination public/ -Force
+    - Copy-Item -Path assets -Destination public/ -Recurse -Force
+    - Copy-Item -Path admin -Destination public/ -Recurse -Force
+    - Copy-Item -Path supabase -Destination public/ -Recurse -Force
+    - Copy-Item -Path robots.txt -Destination public/ -Force
   artifacts:
     paths:
       - public
   only:
     - main
+  tags: []
