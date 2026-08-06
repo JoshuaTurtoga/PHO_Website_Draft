@@ -1,0 +1,17 @@
+# GitLab Pages deployment configuration
+# This pipeline deploys the static site to GitLab Pages
+
+pages:
+  stage: deploy
+  script:
+    - mkdir -p public
+    - cp -r *.html *.css *.js public/ 2>/dev/null || true
+    - cp -r assets public/ 2>/dev/null || true
+    - cp -r admin public/ 2>/dev/null || true
+    - cp -r supabase public/ 2>/dev/null || true
+    - cp robots.txt public/ 2>/dev/null || true
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
