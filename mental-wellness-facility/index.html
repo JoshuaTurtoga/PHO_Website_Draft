@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHO Wellness Center</title>
+  <link rel="icon" type="image/png" href="images/placeholder-logo.png">
+  <link rel="apple-touch-icon" href="images/placeholder-logo.png">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Supabase library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <!-- PUBLIC SITE -->
+  <div id="public-site" style="position: relative;">
+    <!-- Floating background blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <header class="header">
+      <div class="header-container">
+        <div class="logo">
+          <img src="images/placeholder-logo.png" alt="PHO Logo" class="logo-img">
+          <h1>PHO Mental Wellness Facility</h1>
+        </div>
+        <nav class="nav">
+          <a href="#home" class="nav-link">Home</a>
+          <a href="#services" class="nav-link">Services</a>
+          <a href="#activities" class="nav-link">Activities</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section with Carousel -->
+    <section id="home" class="hero">
+      <div class="carousel">
+        <div class="carousel-slides">
+          <div class="carousel-slide active">
+            <img src="images/placeholder1.jpg" alt="Slide 1">
+          </div>
+          <div class="carousel-slide">
+            <img src="images/placeholder2.jpg" alt="Slide 2">
+          </div>
+          <div class="carousel-slide">
+            <img src="images/placeholder3.jpg" alt="Slide 3">
+          </div>
+        </div>
+        <div class="carousel-overlay"></div>
+        <div class="hero-content container">
+          <h1>Welcome to PHO Mental Wellness Facility</h1>
+          <p>It's okay not to be okay as long as you are not giving up.We at PHO Mental Wellness Program,we listen and support you every step of the way.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Values Section -->
+    <section id="about" class="section core-values-section">
+      <div class="container">
+        <div class="section-header center">
+          <span class="section-eyebrow">Who We Are</span>
+          <h2 class="section-title">Mandate, Vision & Mission</h2>
+        </div>
+        <div class="values-grid">
+          <!-- Mandate Card -->
+          <div class="value-card">
+            <div class="value-icon">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <h3>Mandate</h3>
+            <p>The PHO Mental Wellness Facility is committed to promoting, protecting, and enhancing the mental health and well-being of all Boholanos. We provide accessible, holistic, and quality services through prevention, intervention, education, and advocacy.</p>
+          </div>
+
+          <!-- Vision Card -->
+          <div class="value-card">
+            <div class="value-icon">
+              <i data-lucide="eye"></i>
+            </div>
+            <h3>Vision</h3>
+            <p>A community where mental health is valued, quality services are accessible to all, and individuals experiencing mental health conditions are treated with dignity, respect, and deep compassion.</p>
+          </div>
+
+          <!-- Mission Card -->
+          <div class="value-card">
+            <div class="value-icon">
+              <i data-lucide="target"></i>
+            </div>
+            <h3>Mission</h3>
+            <p>To deliver client-centered responsive care, promote mental awareness and education to break societal stigma, empower Boholano families, and foster safe supportive spaces that encourage healing.</p>
+          </div>
+        </div>
+      </div>
+    </section> 
+
+
+    <section id="services" class="section">
+      <div class="container">
+        <h2>Services We Offer</h2>
+        <div class="services-grid">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="service-icon">🧠</div>
+                <h3>Mental Health Assessment</h3>
+              </div>
+              <div class="flip-card-back">
+                <p class="service-description">An initial mental health screening and assessment to better understand your concerns and determine the most appropriate intervention, treatment, or referral.</p>
+                <button class="btn-primary consult-btn" onclick="openConsultModal('Mental Health Counseling')">Consult Now</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="service-icon">💬</div>
+                <h3>Psychological Counseling</h3>
+              </div>
+              <div class="flip-card-back">
+                <p class="service-description">A confidential and supportive service that helps individuals manage emotional, psychological, and personal concerns through professional guidance and evidence-based interventions.</p>
+                <button class="btn-primary consult-btn" onclick="openConsultModal('Consultation')">Consult Now</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="service-icon">💊</div>
+                <h3>Psychiatric Services</h3>
+              </div>
+              <div class="flip-card-back">
+                <p class="service-description">Psychiatric assessment, diagnosis, treatment, medication management, and follow-up care provided by a licensed psychiatrist.</p>
+                <button class="btn-primary consult-btn" onclick="openConsultModal('Prescription Services')">Consult Now</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="service-icon">🏥</div>
+                <h3>24/7 Mental Health Hotline</h3>
+              </div>
+              <div class="flip-card-back">
+                <p class="service-description">Round-the-clock crisis support for individuals experiencing emotional distress 
+                or mental health emergencies. Trained personnel provide immediate assistance, psychological first aid, crisis
+                intervention, and referrals to appropriate services whenever needed.</p>
+                <button class="btn-primary consult-btn" onclick="openConsultModal('Walk-in Appointments')">Consult Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="activities" class="section activities-section">
+      <div class="container">
+        <h2>Our Recent Activities</h2>
+        <div id="activities-container" class="activities-grid">
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer / Contact Section -->
+    <footer id="contact" class="footer">
+      <div class="footer-container">
+        <div class="footer-grid">
+          <!-- Column 1: Brand & Logo -->
+          <div class="footer-brand">
+            <div class="brand-header">
+              <img src="images/placeholder-logo.png" alt="PHO Logo" class="footer-logo">
+              <div class="brand-text">
+                <h3>PHO Wellness</h3>
+                <span>Mental Health Facility</span>
+              </div>
+            </div>
+            <p class="brand-desc">Committed to promoting, protecting, and enhancing the mental health and well-being of all Boholanos. We listen and support you every step of the way.</p>
+          </div>
+
+          <!-- Column 2: Message of Hope -->
+          <div class="footer-cta">
+            <span class="cta-eyebrow">Reach Out</span>
+            <h2 class="cta-heading">You Are Not Alone</h2>
+            <p class="cta-sub">We are here to listen, support, and guide you. Do not hesitate to connect with our professional wellness staff.</p>
+          </div>
+
+          <!-- Column 3: Contact details -->
+          <div class="footer-contact">
+            <h3>Contact Info</h3>
+            <div class="contact-list">
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i data-lucide="map-pin"></i>
+                </div>
+                <div class="contact-detail">
+                  <strong>Location</strong>
+                  <span>Bohol Provincial Health Office<br>- Mental Wellness Facility</span>
+                </div>
+              </div>
+              
+              <a href="mailto:amomawellness@gmail.com" class="contact-item link-item">
+                <div class="contact-icon">
+                  <i data-lucide="mail"></i>
+                </div>
+                <div class="contact-detail">
+                  <strong>Email Us</strong>
+                  <span>amomawellness@gmail.com</span>
+                </div>
+              </a>
+              
+              <a href="tel:+639282869333" class="contact-item link-item">
+                <div class="contact-icon">
+                  <i data-lucide="phone"></i>
+                </div>
+                <div class="contact-detail">
+                  <strong>Call / Text</strong>
+                  <span>+63-928-286-9333</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="container text-center">
+          <p>&copy; 2026 PHO Wellness Center. All Rights Reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Consultation Modal -->
+  <div id="consult-modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="consult-modal-title">Book a Consultation</h2>
+        <button class="close-modal" onclick="closeConsultModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="consult-form">
+          <input type="hidden" id="consult-service">
+          <div class="form-group">
+            <label for="consult-name">Your Name <span style="font-weight: normal; font-size: 0.85em; color: #666;">(Optional)</span></label>
+            <input type="text" id="consult-name" placeholder="Enter your name (Optional)">
+          </div>
+          <div class="form-group">
+            <label for="consult-contact">Contact Number (11 Digits)</label>
+            <input type="tel" id="consult-contact" maxlength="11" inputmode="numeric" placeholder="09123456789" required>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-outline" onclick="closeConsultModal()">Cancel</button>
+            <button type="submit" class="btn-primary" id="consult-submit-btn">Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Popup Modal -->
+  <div id="success-modal-overlay" class="modal-overlay hidden">
+    <div class="modal success-modal">
+      <div class="success-modal-content">
+        <div class="success-icon-wrapper">
+          <svg class="success-icon" viewBox="0 0 52 52">
+            <circle class="success-icon-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="success-icon-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+          </svg>
+        </div>
+        <h2 class="success-title">Request Submitted!</h2>
+        <p class="success-message">Thank you for reaching out. Your consultation request has been successfully submitted. Our team will contact you soon to schedule your appointment.</p>
+        <div class="success-details" id="success-details"></div>
+        <button class="btn-primary success-close-btn" onclick="closeSuccessModal()">Got it, thank you!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

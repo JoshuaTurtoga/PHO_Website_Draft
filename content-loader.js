@@ -127,6 +127,15 @@
       if (entry.href) {
         link.setAttribute('href', entry.href);
       }
+      if (entry.id === '#nav-about') {
+        // The About nav link must always anchor to the #about section on the home page.
+        // If the CMS stored a reference to the "More About Us" sub-page, rewrite it.
+        const currentHref = link.getAttribute('href') || '';
+        const normalized = currentHref.replace(/^\//, '').replace(/\.html$/, '');
+        if (normalized === 'more-about-us' || normalized === '' ) {
+          link.setAttribute('href', '/#about');
+        }
+      }
       if (entry.id === '#nav-contact') {
         const currentHref = link.getAttribute('href') || '';
         if (currentHref === '/contact-us' || currentHref === '/contact-us.html' || currentHref === 'contact-us' || currentHref === 'contact-us.html') {
@@ -134,6 +143,7 @@
         }
       }
     });
+
   }
 
   function renderFooter(footer) {
@@ -379,8 +389,9 @@
 
     grid.innerHTML = cards.map((card) => {
       const tag = card.url ? 'a' : 'div';
-      const href = card.url ? ` href="${escapeHtml(card.url)}" target="${themeKey === 'lab' && /^https?:/.test(card.url) ? '_blank' : '_self'}"` : '';
-      const rel = card.url && /^https?:/.test(card.url) ? ' rel="noreferrer"' : '';
+      const isExternal = card.url && /^https?:/.test(card.url);
+      const href = card.url ? ` href="${escapeHtml(card.url)}" target="${isExternal ? '_blank' : '_self'}"` : '';
+      const rel = isExternal ? ' rel="noreferrer"' : '';
       const iconContent = card.image_url ? `<img src="${escapeHtml(card.image_url)}" alt="${escapeHtml(card.title || '')}" style="width: 100%; height: 100%; object-fit: contain;">` : DEFAULT_ICON[themeKey === 'promo' ? 'promo' : themeKey === 'hospital' ? 'hospital' : 'lab'];
       return `
         <${tag}${href}${rel} class="facility-card${themeKey === 'hospital' ? ' hospital' : themeKey === 'promo' ? ' promo' : ''}" style="${card.url ? 'text-decoration:none;color:inherit;display:block;' : ''}">
@@ -391,6 +402,60 @@
       `;
     }).join('');
   }
+
+  // Dedicated renderer for the laboratory page — always guarantees the Mental Wellness
+  // Facility card appears first with its fixed internal URL, using CMS data when
+  // available (title / description / image_url) or static defaults when not.
+  function renderLabCards(selector, cards) {
+    const grid = document.querySelector(selector);
+    if (!grid) return;
+
+    // If CMS returned no data at all, leave the static HTML untouched.
+    if (!Array.isArray(cards) || !cards.length) return;
+
+    // Identify the wellness card: prefer icon_key match, fall back to title keyword.
+    const isWellnessCard = (c) =>
+      c.icon_key === 'mental-wellness' ||
+      (c.title || '').toLowerCase().includes('wellness');
+
+    const wellnessCard = cards.find(isWellnessCard) || null;
+    const otherCards   = cards.filter((c) => !isWellnessCard(c));
+
+    // Use CMS data for content when available; fall back to safe static defaults.
+    const wTitle = wellnessCard?.title || 'Mental Wellness Facility';
+    const wDesc  = wellnessCard?.description || 'Holistic wellness and rehabilitation services promoting mental health and overall well-being.';
+    const wIcon  = wellnessCard?.image_url
+      ? `<img src="${escapeHtml(wellnessCard.image_url)}" alt="${escapeHtml(wTitle)}" style="width:100%;height:100%;object-fit:contain;">`
+      : DEFAULT_ICON.lab;
+
+    const wellnessHtml = `
+      <a href="/mental-wellness-facility" class="facility-card" id="facility-wellness-cms" style="text-decoration:none;color:inherit;display:block;">
+        <div class="facility-icon-wrap">${wIcon}</div>
+        <h3 class="facility-name">${escapeHtml(wTitle)}</h3>
+        <p class="facility-desc">${escapeHtml(wDesc)}</p>
+      </a>
+    `;
+
+    const otherHtml = otherCards.map((card) => {
+      const tag = card.url ? 'a' : 'div';
+      const isExternal = card.url && /^https?:/.test(card.url);
+      const href = card.url ? ` href="${escapeHtml(card.url)}" target="${isExternal ? '_blank' : '_self'}"` : '';
+      const rel  = isExternal ? ' rel="noreferrer"' : '';
+      const iconContent = card.image_url
+        ? `<img src="${escapeHtml(card.image_url)}" alt="${escapeHtml(card.title || '')}" style="width:100%;height:100%;object-fit:contain;">`
+        : DEFAULT_ICON.lab;
+      return `
+        <${tag}${href}${rel} class="facility-card" style="${card.url ? 'text-decoration:none;color:inherit;display:block;' : ''}">
+          <div class="facility-icon-wrap">${iconContent}</div>
+          <h3 class="facility-name">${escapeHtml(card.title || '')}</h3>
+          <p class="facility-desc">${escapeHtml(card.description || '')}</p>
+        </${tag}>
+      `;
+    }).join('');
+
+    grid.innerHTML = wellnessHtml + otherHtml;
+  }
+
 
   function renderHospitalsLanding(cards, sections) {
     renderPageHero(getSection(sections, 'hospitals', 'hero'));
@@ -617,23 +682,23 @@
 
     const serviceGrid = document.querySelector('.hospital-services-grid');
     if (serviceGrid && Array.isArray(services)) {
-      const existingCards = Array.from(serviceGrid.querySelectorAll('.service-detail-card'));
       serviceGrid.innerHTML = '';
       
       services.forEach((service, index) => {
-        const card = existingCards[index];
-        let iconHtml = DEFAULT_ICON.hospital;
-        if (card) {
-           const iconEl = card.querySelector('.service-card-icon');
-           if (iconEl) iconHtml = iconEl.innerHTML;
-        }
+        // Uniform medical cross icon for all service cards
+        const iconHtml = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg>';
         
         // items can be a pre-parsed JS array (Supabase JSONB) or a JSON string (legacy)
         let itemsArray = service.items;
         if (typeof itemsArray === 'string') {
           try { itemsArray = JSON.parse(itemsArray); } catch { itemsArray = []; }
         }
-        const listMarkup = (Array.isArray(itemsArray) ? itemsArray : []).map((item) => {
+        const parsedItems = Array.isArray(itemsArray) ? itemsArray : [];
+        const hasIntro = Boolean(service.intro && service.intro.trim());
+        const hasItems = parsedItems.length > 0;
+        const isTitleOnly = !hasIntro && !hasItems;
+
+        const listMarkup = parsedItems.map((item) => {
           if (typeof item === 'string') {
             return `<div class="service-list-item"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>${escapeHtml(item)}</span></div>`;
           }
@@ -647,15 +712,25 @@
             </div>
           `;
         }).join('');
-        
-        const cardHtml = `
-          <div class="service-detail-card">
+
+        const cardClass = isTitleOnly ? 'service-detail-card service-title-only' : 'service-detail-card';
+        const cardHtml = isTitleOnly
+          ? `
+          <div class="${cardClass}">
+            <div class="service-card-header">
+              <div class="service-card-icon">${iconHtml}</div>
+              <h3 class="service-card-title">${escapeHtml(service.title || '')}</h3>
+            </div>
+          </div>
+        `
+          : `
+          <div class="${cardClass}">
             <div class="service-card-header">
               <div class="service-card-icon">${iconHtml}</div>
               <h3 class="service-card-title">${escapeHtml(service.title || '')}</h3>
             </div>
             <div class="service-card-content-wrapper">
-              ${service.intro ? `<p class="facility-desc" style="margin-bottom:1rem;">${escapeHtml(service.intro)}</p>` : ''}
+              ${hasIntro ? `<p class="facility-desc" style="margin-bottom:1rem;">${escapeHtml(service.intro)}</p>` : ''}
               <div class="service-list">${listMarkup}</div>
             </div>
           </div>
@@ -749,16 +824,16 @@
   }
 
   async function load() {
-    if (!cms.isConfigured?.()) {
-      return;
-    }
-
-    const page = getCurrentPage();
-    if (page.key === 'unknown') {
-      return;
-    }
-
     try {
+      if (!cms.isConfigured?.()) {
+        return;
+      }
+
+      const page = getCurrentPage();
+      if (page.key === 'unknown') {
+        return;
+      }
+
       const results = await fetchPublicContent(page);
       if (!results?.length) {
         return;
@@ -774,7 +849,7 @@
         renderAbout(sections);
       } else if (page.key === 'laboratory') {
         renderPageHero(getSection(sections, 'laboratory', 'hero'));
-        renderCardList('.facilities-grid', results[1]?.data || [], 'lab');
+        renderLabCards('.facilities-grid', results[1]?.data || []);
       } else if (page.key === 'promotive') {
         renderPageHero(getSection(sections, 'promotive', 'hero'));
         renderCardList('.facilities-grid', results[1]?.data || [], 'promo');
@@ -802,6 +877,8 @@
       document.dispatchEvent(new CustomEvent('pho-cms:content-applied', { detail: { page } }));
     } catch (error) {
       console.warn('PHO CMS content loader fell back to static content.', error);
+    } finally {
+      document.documentElement.classList.remove('page-loading');
     }
   }
 

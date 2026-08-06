@@ -50,6 +50,37 @@ img { display: block; max-width: 100%; }
 ul { list-style: none; }
 button { cursor: pointer; font-family: inherit; border: none; background: none; }
 
+/* ── Page Loader ── */
+html.page-loading body {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  overflow: hidden !important;
+}
+html.page-loading::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--white);
+  z-index: 999999;
+}
+html.page-loading::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--green-pale);
+  border-top-color: var(--green-primary);
+  border-radius: 50%;
+  animation: pho-spin 1s linear infinite;
+  z-index: 1000000;
+}
+@keyframes pho-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 .container {
   width: min(1200px, 92%);
   margin-inline: auto;
@@ -1694,6 +1725,19 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .service-sublist-scroll::-webkit-scrollbar-thumb {
   background: var(--green-muted);
   border-radius: 3px;
+}
+
+/* Title-only service cards (no dropdown) */
+.service-detail-card.service-title-only {
+  cursor: default;
+}
+.service-detail-card.service-title-only .service-card-header {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.service-detail-card.service-title-only .service-card-header::after {
+  display: none;
 }
 
 /* Activities Section */

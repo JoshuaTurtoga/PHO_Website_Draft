@@ -35,7 +35,7 @@
         { key: 'home_label', label: 'Home Label', type: 'text' },
         { key: 'home_href', label: 'Home Link', type: 'url' },
         { key: 'about_label', label: 'About Label', type: 'text' },
-        { key: 'about_href', label: 'About Link', type: 'url' },
+        { key: 'about_href', label: 'About Link (e.g. /#about)', type: 'url', placeholder: '/#about' },
         { key: 'services_label', label: 'Services Label', type: 'text' },
         { key: 'services_href', label: 'Services Link', type: 'url' },
         { key: 'contact_label', label: 'Contact Label', type: 'text' },
@@ -379,12 +379,13 @@
       kind: 'table',
       table: 'lab_cards',
       title: 'Laboratory Cards',
-      description: 'Add, edit, delete, and reorder cards for the Laboratory page.',
+      description: 'Add, edit, delete, and reorder cards for the Laboratory page. The Mental Wellness Facility card is always pinned to position 1 and always links to the internal Mental Wellness Facility page.',
+      fixedFirstKey: 'mental-wellness',
       fields: [
         { key: 'title', label: 'Title', type: 'text' },
         { key: 'description', label: 'Description', type: 'textarea' },
-        { key: 'url', label: 'URL', type: 'url' },
-        { key: 'image_url', label: 'Icon Image', type: 'image' }
+        { key: 'image_url', label: 'Icon Image', type: 'image' },
+        { key: 'icon_key', label: 'icon_key', type: 'hidden' }
       ]
     },
     promotive_cards: {
@@ -782,6 +783,12 @@
       `;
     }
 
+    // Hidden field: invisible in UI but value is preserved via a hidden input so the
+    // save logic reads it back correctly (e.g. icon_key on lab_cards).
+    if (field.type === 'hidden') {
+      return `<input type="hidden" data-field-path="${escapeHtml(path)}" value="${escapeHtml(value || '')}">`;
+    }
+
     const type = field.type === 'url' ? 'url' : field.type === 'phone' ? 'tel' : 'text';
     return `
       <div class="cms-field">
@@ -808,6 +815,38 @@
   }
 
   function renderTableView(schema, data) {
+    const fixedFirstKey = schema.fixedFirstKey || null;
+    const records = Array.isArray(data.records) ? data.records : [];
+    const itemLabel = schema.title.replace(/s$/, '');
+
+    const listMarkup = records.length
+      ? records.map((item, index) => {
+          const isFixed = fixedFirstKey && item.icon_key === fixedFirstKey;
+          const toolbar = isFixed
+            ? `<div class="cms-repeater-toolbar">
+                <strong>${escapeHtml(itemLabel)} ${index + 1}
+                  <span style="display:inline-block;margin-left:8px;padding:2px 10px;border-radius:20px;font-size:0.72em;background:rgba(46,125,50,0.12);color:#2e7d32;font-weight:600;vertical-align:middle;">Fixed — Position 1 · URL locked to /mental-wellness-facility</span>
+                </strong>
+               </div>`
+            : `<div class="cms-repeater-toolbar">
+                <strong>${escapeHtml(itemLabel)} ${index + 1}</strong>
+                <div class="cms-repeater-actions">
+                  <button type="button" class="cms-secondary-button" data-repeater-move="up" data-field-path="records" data-index="${index}">Up</button>
+                  <button type="button" class="cms-secondary-button" data-repeater-move="down" data-field-path="records" data-index="${index}">Down</button>
+                  <button type="button" class="cms-danger-button" data-repeater-delete="true" data-field-path="records" data-index="${index}">Delete</button>
+                </div>
+               </div>`;
+          return `
+            <div class="cms-repeater-item">
+              ${toolbar}
+              <div class="cms-form-grid">
+                ${(schema.fields || []).map((childField) => renderField(childField, item?.[childField.key], `records.${index}.${childField.key}`)).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')
+      : '<div class="cms-empty-state">No entries yet.</div>';
+
     return `
       <div class="cms-panel">
         <div class="cms-panel-header">
@@ -817,22 +856,20 @@
           </div>
         </div>
         <div class="cms-form-grid">
-          ${renderField(
-            {
-              key: 'records',
-              label: schema.title,
-              type: 'repeater',
-              addLabel: `Add ${schema.title.replace(/s$/, '')}`,
-              itemLabel: schema.title.replace(/s$/, ''),
-              itemFields: schema.fields
-            },
-            data.records,
-            'records'
-          )}
+          <div class="cms-field full">
+            <div class="cms-fieldset-title">${escapeHtml(schema.title)}</div>
+            <div class="cms-repeater">
+              <div class="cms-repeater-list">${listMarkup}</div>
+              <div class="cms-actions-row" style="justify-content:flex-start;">
+                <button type="button" class="cms-secondary-button" data-repeater-add="true" data-field-path="records">Add ${escapeHtml(itemLabel)}</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     `;
   }
+
 
   function renderSingleTableView(schema, data) {
     return `
@@ -960,11 +997,47 @@
     state.currentSchema = schema;
     state.currentMode = schema.kind;
     state.currentViewId = viewId;
-    state.currentData = schema.kind === 'single-table'
-      ? clone(result?.data?.[0] || { id: 1 })
-      : { records: clone(result?.data || []) };
+
+    if (schema.kind === 'single-table') {
+      state.currentData = clone(result?.data?.[0] || { id: 1 });
+    } else {
+      let records = clone(result?.data || []);
+
+      // If this schema declares a fixed-first card, always pin it to position 0.
+      // Match by icon_key first; fall back to title keyword so it works even before
+      // the SQL migration has been applied to the live database.
+      if (schema.fixedFirstKey) {
+        const isFixed = (r) =>
+          r.icon_key === schema.fixedFirstKey ||
+          (r.title || '').toLowerCase().includes('wellness');
+
+        const fixedIdx = records.findIndex(isFixed);
+        if (fixedIdx > 0) {
+          // Found but not first — move to front and tag it.
+          const [fixedCard] = records.splice(fixedIdx, 1);
+          fixedCard.icon_key = schema.fixedFirstKey;
+          records.unshift(fixedCard);
+        } else if (fixedIdx === 0) {
+          // Already first — ensure icon_key is set correctly.
+          records[0].icon_key = schema.fixedFirstKey;
+        } else {
+          // Not found at all — synthesize a default entry so the admin can fill it in.
+          records.unshift({
+            id: generateUUID(),
+            title: 'Mental Wellness Facility',
+            description: 'Holistic wellness and rehabilitation services promoting mental health and overall well-being.',
+            image_url: null,
+            icon_key: schema.fixedFirstKey,
+            sort_order: 1
+          });
+        }
+      }
+
+      state.currentData = { records };
+    }
     renderCurrentView();
   }
+
 
   function formatHospitalServicesForEditor(rows) {
     return (rows || []).map((row) => ({
@@ -1085,10 +1158,12 @@
         }
       } else if (state.currentMode === 'table') {
         const schema = state.currentSchema;
+        const fixedFirstKey = schema.fixedFirstKey || null;
         const existingRows = await client.from(schema.table).select('id');
         const existingIds = new Set((existingRows?.data || []).map((row) => row.id));
         const nextRecords = (state.currentData.records || []).map((record, index) => {
-          const payload = { id: record.id, sort_order: index + 1 };
+          const isMentalWellness = fixedFirstKey && record.icon_key === fixedFirstKey;
+          const payload = { id: record.id, sort_order: isMentalWellness ? 1 : index + 1 };
           schema.fields.forEach(f => {
             if (record[f.key] !== undefined) {
               payload[f.key] = record[f.key];
@@ -1097,6 +1172,7 @@
           return payload;
         });
         const keepIds = new Set(nextRecords.map((row) => row.id).filter(Boolean));
+        // Never delete the fixed Mental Wellness Facility card — skip its id from deletion.
         const deleteIds = [...existingIds].filter((id) => !keepIds.has(id));
 
         if (deleteIds.length) {

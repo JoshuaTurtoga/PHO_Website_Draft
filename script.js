@@ -175,6 +175,11 @@
 
   function initServiceAccordions() {
     document.querySelectorAll('.service-detail-card').forEach((card) => {
+      // Skip title-only cards — they have no dropdown content
+      if (card.classList.contains('service-title-only')) {
+        return;
+      }
+
       bindOnce(card, 'phoServiceCardBound', 'click', (event) => {
         const header = card.querySelector('.service-card-header');
         const wrapper = card.querySelector('.service-card-content-wrapper');
