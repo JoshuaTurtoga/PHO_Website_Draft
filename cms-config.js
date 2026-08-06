@@ -4,8 +4,8 @@
 
   const existing = window.PHO_CMS_CONFIG || {};
   const config = {
-    supabaseUrl: existing.supabaseUrl || PHO_SUPABASE_URL || localStorage.getItem('pho.supabase.url') || DEFAULT_SUPABASE_URL,
-    supabaseAnonKey: existing.supabaseAnonKey || PHO_SUPABASE_ANON_KEY || localStorage.getItem('pho.supabase.anonKey') || DEFAULT_SUPABASE_ANON_KEY,
+    supabaseUrl: existing.supabaseUrl || window.PHO_SUPABASE_URL || localStorage.getItem('pho.supabase.url') || DEFAULT_SUPABASE_URL,
+    supabaseAnonKey: existing.supabaseAnonKey || window.PHO_SUPABASE_ANON_KEY || localStorage.getItem('pho.supabase.anonKey') || DEFAULT_SUPABASE_ANON_KEY,
     mediaBucket: 'cms-assets',
     contentTimeoutMs: 8000,
     authTimeoutMs: 10000,
