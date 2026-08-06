@@ -1620,7 +1620,7 @@
 
   async function guardDashboard() {
     if (!cms.isConfigured?.()) {
-      throw new Error('Supabase is not configured yet. Add your project URL and anon key in cms-config.js.');
+      throw new Error('Supabase is not configured yet. Check cms-config.js or env.js for the project URL and anon key.');
     }
 
     const auth = await cms.requireAdmin?.();

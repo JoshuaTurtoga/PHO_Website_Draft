@@ -211,12 +211,13 @@
     document.querySelectorAll('.nav-link').forEach((link) => {
       link.classList.remove('active');
       const href = link.getAttribute('href');
+      const normalizedHref = (href || '').replace(/\.html$/, '').replace(/^\//, '');
 
       if (
-        href === '/' + currentPage ||
-        href === currentPage ||
-        (currentPage === '' && (href === '/' || href === '')) ||
-        (currentPage === 'index' && (href === '/' || href === ''))
+        normalizedHref === currentPage ||
+        normalizedHref === '/' + currentPage ||
+        (currentPage === '' && (normalizedHref === '' || normalizedHref === '/')) ||
+        (currentPage === 'index' && (normalizedHref === '' || normalizedHref === '/'))
       ) {
         link.classList.add('active');
       }
@@ -242,7 +243,11 @@
         link.classList.add('active');
       }
 
-      if (currentPage === 'more-about-us' && (href === '/more-about-us' || href === '/#about')) {
+      if (currentPage === 'more-about-us' && (normalizedHref === 'more-about-us' || href === '/#about')) {
+        link.classList.add('active');
+      }
+
+      if (currentPage === 'contact-us' && normalizedHref === 'contact-us') {
         link.classList.add('active');
       }
     });

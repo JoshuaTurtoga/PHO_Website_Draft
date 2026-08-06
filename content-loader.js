@@ -127,6 +127,12 @@
       if (entry.href) {
         link.setAttribute('href', entry.href);
       }
+      if (entry.id === '#nav-contact') {
+        const currentHref = link.getAttribute('href') || '';
+        if (currentHref === '/contact-us' || currentHref === '/contact-us.html' || currentHref === 'contact-us' || currentHref === 'contact-us.html') {
+          link.setAttribute('href', 'contact-us.html');
+        }
+      }
     });
   }
 

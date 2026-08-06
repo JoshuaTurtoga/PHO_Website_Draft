@@ -101,7 +101,7 @@
     }
 
     if (!cms.isConfigured?.()) {
-      setStatus('Supabase is not configured yet. Add the project URL and anon key in cms-config.js.', 'error');
+      setStatus('Supabase is not configured yet. Check cms-config.js or env.js for the project URL and anon key.', 'error');
       return;
     }
 
