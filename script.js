@@ -408,7 +408,7 @@
       document.body.appendChild(wrapper);
 
       // Typing animation logic
-      const fullText = "Click here to see more updates in our Facebook Page!";
+      const fullText = "Click here for more updates on our Facebook Page!";
       let typeTimer = null;
       let holdTimer = null;
       let hideTimer = null;
