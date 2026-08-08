@@ -376,6 +376,80 @@
     }
   }
 
+  function initTartie() {
+    if (!document.querySelector('.tartie-wrapper')) {
+      const wrapper = document.createElement('a');
+      wrapper.className = 'tartie-wrapper';
+      wrapper.href = 'https://www.facebook.com/boholpho';
+      wrapper.target = '_blank';
+      wrapper.rel = 'noopener noreferrer';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'tartie-speech-bubble';
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'tartie-speech-text';
+
+      const cursorSpan = document.createElement('span');
+      cursorSpan.className = 'tartie-cursor';
+
+      bubble.appendChild(textSpan);
+      bubble.appendChild(cursorSpan);
+
+      const tartie = document.createElement('div');
+      tartie.className = 'tartie-container';
+
+      wrapper.appendChild(bubble);
+      wrapper.appendChild(tartie);
+      document.body.appendChild(wrapper);
+
+      // Typing animation logic
+      const fullText = "Click here to see more updates in our Facebook Page!";
+      let typeTimer = null;
+      let holdTimer = null;
+      let hideTimer = null;
+
+      function startTypingLoop() {
+        // Reset state
+        bubble.classList.remove('is-visible');
+        textSpan.textContent = '';
+        cursorSpan.style.display = 'inline-block';
+
+        // Wait before popping up
+        hideTimer = setTimeout(() => {
+          bubble.classList.add('is-visible');
+
+          let charIndex = 0;
+          const typingSpeed = 45; // ms per character
+
+          typeTimer = setInterval(() => {
+            if (charIndex < fullText.length) {
+              textSpan.textContent += fullText.charAt(charIndex);
+              charIndex++;
+            } else {
+              clearInterval(typeTimer);
+              cursorSpan.style.display = 'none'; // Hide cursor after typing finishes
+
+              // Hold visible text for 4 seconds
+              holdTimer = setTimeout(() => {
+                bubble.classList.remove('is-visible');
+
+                // Wait 1.2 seconds while hidden, then restart loop
+                hideTimer = setTimeout(() => {
+                  startTypingLoop();
+                }, 1200);
+
+              }, 4000);
+            }
+          }, typingSpeed);
+
+        }, 600);
+      }
+
+      startTypingLoop();
+    }
+  }
+
   function reinitInteractivity() {
     initNavbar();
     initCarousels();
@@ -386,6 +460,7 @@
     initActiveNavHighlight();
     initOrgCarousel();
     initLightbox();
+    initTartie();
   }
 
   window.reinitInteractivity = reinitInteractivity;
