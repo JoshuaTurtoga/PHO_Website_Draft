@@ -49,7 +49,11 @@
       document.addEventListener('click', (event) => {
         const currentNavLinks = document.getElementById('nav-links');
         const currentHamburger = document.getElementById('hamburger-btn');
-        if (!currentNavLinks?.contains(event.target) && event.target !== currentHamburger) {
+        const isNavLink = Boolean(event.target.closest('.nav-link'));
+        const isInsideHamburger = Boolean(currentHamburger?.contains(event.target));
+        const isInsideNavLinks = Boolean(currentNavLinks?.contains(event.target));
+
+        if ((!isInsideNavLinks && !isInsideHamburger) || isNavLink) {
           currentNavLinks?.classList.remove('mobile-open');
           currentHamburger?.classList.remove('open');
         }
@@ -446,7 +450,20 @@
         }, 600);
       }
 
-      startTypingLoop();
+      // Slide in from right side after 6 seconds (remembers session)
+      const hasAppearedInSession = sessionStorage.getItem('tartie_appeared') === 'true';
+      const initialAppearDelay = hasAppearedInSession ? 400 : 6000;
+
+      setTimeout(() => {
+        wrapper.classList.add('is-appeared');
+        sessionStorage.setItem('tartie_appeared', 'true');
+
+        // Start Tartie sprite animation & speech bubble typing ONLY AFTER slide-in completes (1.3s)
+        setTimeout(() => {
+          wrapper.classList.add('is-animating');
+          startTypingLoop();
+        }, 250);
+      }, initialAppearDelay);
     }
   }
 
