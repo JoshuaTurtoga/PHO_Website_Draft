@@ -43,6 +43,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const navMenu = document.getElementById('nav-menu');
+  if (mobileMenuBtn && navMenu) {
+    mobileMenuBtn.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      mobileMenuBtn.classList.toggle('active');
+    });
+
+    // Close menu when a link is clicked
+    const navLinks = navMenu.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        mobileMenuBtn.classList.remove('active');
+      });
+    });
+  }
+
   const contactInput = document.getElementById('consult-contact');
   if (contactInput) {
     contactInput.addEventListener('input', (e) => {
